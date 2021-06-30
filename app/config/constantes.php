@@ -3,6 +3,12 @@
 // Nome do App
 define("SITE_NOME", "Passow Imóveis");
 
+// Token da API
+define("TOKEN_VISTA", "c9fdd79584fb8d369a6a579af1a8f681");
+
+// Numero de exibições por página
+define("NUM_PAG", 24);
+
 /**
  * =========================================
  *          Unidades de Medida
