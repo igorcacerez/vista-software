@@ -21,10 +21,10 @@ namespace Model;
 use DuugWork\Database;
 
 /**
- * Class Token
+ * Class Contrato
  * @package Model
  */
-class Token extends Database
+class Contrato extends Database
 {
     private $conexao;
 
@@ -38,8 +38,8 @@ class Token extends Database
         $this->conexao = parent::getConexao();
 
         // Seta o nome da tablea
-        parent::setTable("token");
+        parent::setTable("contrato");
 
     } // END >> Fun::__construct()
 
-} // END >> Class::Token
+} // END >> Class::Contrato

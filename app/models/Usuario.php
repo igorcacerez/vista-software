@@ -20,7 +20,10 @@ namespace Model;
 
 use DuugWork\Database;
 
-
+/**
+ * Class Usuario
+ * @package Model
+ */
 class Usuario extends Database
 {
     private $conexao;
@@ -39,4 +42,4 @@ class Usuario extends Database
 
     } // END >> Fun::__construct()
 
-} // END >> Class::Example
+} // END >> Class::Usuario
