@@ -16,3 +16,11 @@ $Rotas->onGroup("api-locatario","GET","get","getAll");
 $Rotas->onGroup("api-locatario","POST","insert","insert");
 $Rotas->onGroup("api-locatario","PUT","update/{p}","update");
 $Rotas->onGroup("api-locatario","DELETE","delete/{p}","delete");
+
+// LOCADOR
+$Rotas->group("api-locador","api/locador","Api\Locador");
+$Rotas->onGroup("api-locador","GET","get/{p}","get");
+$Rotas->onGroup("api-locador","GET","get","getAll");
+$Rotas->onGroup("api-locador","POST","insert","insert");
+$Rotas->onGroup("api-locador","PUT","update/{p}","update");
+$Rotas->onGroup("api-locador","DELETE","delete/{p}","delete");
