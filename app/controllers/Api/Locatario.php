@@ -4,116 +4,45 @@
 namespace Controller\Api;
 
 // Importações
-use DuugWork\Controller;
 use DuugWork\Helper\Input;
 use Helper\Seguranca;
+use Model\Contrato;
 
 /**
  * Classe responsável por realizar todos os processos
- * da api do usuario.
+ * da api do locatario.
  *
- * Class Usuario
+ * Class Locatario
  * @package Controller\Api
  */
-class Usuario extends Controller
+class Locatario extends \DuugWork\Controller
 {
     // Objetos
-    private $objModelUsuario;
+    private $objModelLocatario;
+    private $objModelContrato;
     private $objHelperSeguranca;
 
     // Método construtor
     public function __construct()
     {
-        // Chama o construtor da class pai
+        // Inicializa o método pai
         parent::__construct();
 
         // Instancia os objetos
-        $this->objModelUsuario = new \Model\Usuario();
+        $this->objModelLocatario = new \Model\Locatario();
+        $this->objModelContrato = new Contrato();
         $this->objHelperSeguranca = new Seguranca();
 
     } // End >> fun::__construct()
 
 
     /**
-     * Método responsável por receber um email e senha,
-     * verificar se existe algum cadastro na tabela usuario com
-     * os dados informados. Caso tenha gera um token de acesso e
-     * salva o mesmo em uma session e retorna para a view.
-     * ------------------------------------------------------------
-     * @url api/usuario/login
-     * @method POST
-     */
-    public function login()
-    {
-        // Variaveis
-        $dados = null; // Retorno para a view
-        $usuario = null; // Armazena o usuario que realizo o login
-        $dadosLogin = null; // Dados de acesso informados
-        $token = null; // Token de acesso para o usuario
-
-        // Recupera os dados de acesso
-        $dadosLogin = $this->objHelperSeguranca->getDadosLogin();
-
-        // Criptografa a senha
-        $dadosLogin["senha"] = md5($dadosLogin["senha"]);
-
-        // Realiza a busca do usuario
-        $usuario = $this->objModelUsuario
-            ->get(["email" => $dadosLogin["usuario"], "senha" => $dadosLogin["senha"]])
-            ->fetch(\PDO::FETCH_OBJ);
-
-        // Verifica se encontrou o usuario
-        if(!empty($usuario))
-        {
-            // Gera um token de acesso para o usuario
-            $token = $this->objHelperSeguranca->getToken($usuario->id_usuario);
-
-            // Verifica se retorno alguma
-            if(!empty($token))
-            {
-                // Remove a senha do usuario
-                unset($usuario->senha);
-
-                // Salva a session
-                $_SESSION["token"] = $token;
-                $_SESSION["usuario"] = $usuario;
-
-                // Retorno de sucesso
-                $dados = [
-                    "tipo" => true, // Informa que deu certo
-                    "code" => 200, // Codigo HTTP
-                    "mensagem" => "Sucesso! Aguarde...", // Mensagem de exibição no alerta
-                    "objeto" => [
-                        "usuario" => $usuario, // Usuario
-                        "token" => $token // Token
-                    ]
-                ];
-            }
-            else
-            {
-                // Msg de retorno
-                $dados = ["mensagem" => "Ocorreu um erro ao gerar um token de acesso."];
-            } // Error >> Ocorreu um erro ao gerar um token de acesso.
-        }
-        else
-        {
-            // Msg de retorno
-            $dados = ["mensagem" => "Usuario não encontrado."];
-        } // Error >> Usuario não encontrado.
-
-        // Retorno para a view
-        $this->api($dados);
-
-    } // End >> fun::login()
-
-
-    /**
      * Método responsável por realizar a uma busca de um
-     * determinado usuario, que possua o id informado.
+     * determinado locatario, que possua o id informado.
      * ------------------------------------------------------------
-     * @param $id [Id do usuario]
+     * @param $id [Id do locatario]
      * ------------------------------------------------------------
-     * @url api/usuario/get/[ID]
+     * @url api/locatario/get/[ID]
      * @method GET
      */
     public function get($id)
@@ -127,8 +56,8 @@ class Usuario extends Controller
         $usuario = $this->objHelperSeguranca->security();
 
         // Realiza a busca
-        $obj = $this->objModelUsuario
-            ->get(["id_usuario" => $id])
+        $obj = $this->objModelLocatario
+            ->get(["id_locatario" => $id])
             ->fetch(\PDO::FETCH_OBJ);
 
         // Retorno
@@ -145,11 +74,11 @@ class Usuario extends Controller
 
 
     /**
-     * Método responsável por realizar a uma busca de usuarios
+     * Método responsável por realizar a uma busca de locatarios
      * podendo filtrar por condições, ordenar e utilziar limites
      * de exibição por página.
      * ------------------------------------------------------------
-     * @url api/usuario/get
+     * @url api/locatario/get
      * @method GET
      */
     public function getAll()
@@ -157,7 +86,7 @@ class Usuario extends Controller
         // Variaveis
         $dados = null; // Retorno para a view
         $usuario = null; // Usuario logado
-        $obj = null; // Usuarios Encontrados
+        $obj = null; // Locatarios Encontrados
         $ordem = null; // Ordem de exibição (ORDER BY)
         $where = null; // Condições para busca
         $pag = null; // Pagina atual para listagem
@@ -194,13 +123,13 @@ class Usuario extends Controller
         $inicio = ($pag * $limite) - $limite;
 
         // Realiza a busca com páginação
-        $obj = $this->objModelUsuario
+        $obj = $this->objModelLocatario
             ->get($where, $ordem, ($inicio . "," . $limite))
             ->fetchAll(\PDO::FETCH_OBJ);
 
         // Total de resultados encontrados sem o
         // limite
-        $total = $this->objModelUsuario
+        $total = $this->objModelLocatario
             ->get($where)
             ->rowCount();
 
@@ -226,12 +155,12 @@ class Usuario extends Controller
 
 
     /**
-     * Método responsável por receber as informações do usuário via
-     * post, realizar verificações de campos obrigatorios e verificar
-     * se o e-mail informado é unico. Em caso de sucesso insere o
-     * usuario no banco de dados e retorna seu registro.
+     * Método responsável por receber as informações do locatario via
+     * post, realizar verificações de campos obrigatorios.
+     * Em caso de sucesso insere o locatario no banco de dados e
+     * retorna seu registro.
      * ------------------------------------------------------------
-     * @url api/usuario/insert
+     * @url api/locatario/insert
      * @method POST
      */
     public function insert()
@@ -252,52 +181,40 @@ class Usuario extends Controller
         // Verifica se informou os dados obrigatórios
         if(!empty($post["email"])
             && !empty($post["nome"])
-            && !empty($post["senha"]))
+            && !empty($post["telefone"]))
         {
-            // Verifica se já possui algum cadastro com o e-mail informado
-            if($this->objModelUsuario->get(["email" => $post["email"]])->rowCount() == 0)
+            // Monta o array de inserção no banco
+            $salva = [
+                "nome" => $post["nome"],
+                "email" => $post["email"],
+                "telefone" => preg_replace('/[^0-9]/', '', $post["telefone"]) // Apenas numeros
+            ];
+
+            // Insere no banco de dados
+            $obj = $this->objModelLocatario
+                ->insert($salva);
+
+            // Verifica se o usuário foi inserido
+            if(!empty($obj))
             {
-                // Monta o array de inserção no banco
-                $salva = [
-                    "nome" => $post["nome"],
-                    "email" => $post["email"],
-                    "senha" => md5($post["senha"]) // Criptografa em MD5
+                // Busca o objeto recem adicionado no banco de dados
+                $obj = $this->objModelLocatario
+                    ->get(["id_locatario" => $obj])
+                    ->fetch(\PDO::FETCH_OBJ);
+
+                // Array de retorno
+                $dados = [
+                    "tipo" => true, // Informa que deu certo
+                    "code" => 200, // codigo http
+                    "mensagem" => "Locatário adicionado com sucesso.", // Mensagem de exibição
+                    "objeto" => $obj // Retorna o objeto adicionado
                 ];
-
-                // Insere no banco de dados
-                $obj = $this->objModelUsuario
-                    ->insert($salva);
-
-                // Verifica se o usuário foi inserido
-                if(!empty($obj))
-                {
-                    // Busca o objeto recem adicionado no banco de dados
-                    $obj = $this->objModelUsuario
-                        ->get(["id_usuario" => $obj])
-                        ->fetch(\PDO::FETCH_OBJ);
-
-                    // Remove a senha
-                    unset($obj->senha);
-
-                    // Array de retorno
-                    $dados = [
-                        "tipo" => true, // Informa que deu certo
-                        "code" => 200, // codigo http
-                        "mensagem" => "Usuário adicionado com sucesso.", // Mensagem de exibição
-                        "objeto" => $obj // Retorna o objeto adicionado
-                    ];
-                }
-                else
-                {
-                    // Msg
-                    $dados = ["mensagem" => "Ocorreu um erro ao inserir o usuário."];
-                } // Error >> Ocorreu um erro ao inserir o usuário.
             }
             else
             {
                 // Msg
-                $dados = ["mensagem" => "Já existe um cadastro com o e-mail informado."];
-            } // Error >> Já existe um cadastro com o e-mail informado.
+                $dados = ["mensagem" => "Ocorreu um erro ao inserir o locatário."];
+            } // Error >> Ocorreu um erro ao inserir o locatario.
         }
         else
         {
@@ -313,12 +230,12 @@ class Usuario extends Controller
 
     /**
      * Método responsável por receber as informações para serem
-     * alteradas de um determinado usuário e alterar as informações
+     * alteradas de um determinado locatario e alterar as informações
      * no banco de dados.
      * ------------------------------------------------------------
-     * @param $id [Id do usuário a ser alterado]
+     * @param $id [Id do locatario a ser alterado]
      * ------------------------------------------------------------
-     * @url api/usuario/update/[ID]
+     * @url api/locatario/update/[ID]
      * @method PUT
      */
     public function update($id)
@@ -336,9 +253,9 @@ class Usuario extends Controller
         // Recupera o usuario logado
         $usuario = $this->objHelperSeguranca->security();
 
-        // Busca o usuário a ser alterado
-        $obj = $this->objModelUsuario
-            ->get(["id_usuario" => $id])
+        // Busca o locatario a ser alterado
+        $obj = $this->objModelLocatario
+            ->get(["id_locatario" => $id])
             ->fetch(\PDO::FETCH_OBJ);
 
         // Verifica se o usuario foi encontrado
@@ -348,39 +265,14 @@ class Usuario extends Controller
             $put = $objHelperInput->put();
 
             // Remove campos que não podem ser alterados
-            unset($put["id_usuario"]);
-
-            // Verifica se vai alterar a senha
-            if(!empty($put["senha"]))
-            {
-                // Verifica se a senha e a repeteSenha são identicas
-                if($put["senha"] == $put["repeteSenha"])
-                {
-                    // Criptografa a senha
-                    $put["senha"] = md5($put["senha"]);
-                }
-                else
-                {
-                    // Informa do erro e encerra o processo.
-                    $this->api(["mensagem" => "As senhas informadas não confere."]);
-
-                } // Error >> As senhas informadas não confere.
-            }
-            else
-            {
-                // Remove a senha
-                unset($put["senha"]);
-            } // Como não vai alterar - Remove a senha
-
-            // Remove o repeteSenha
-            unset($put["repeteSenha"]);
+            unset($put["id_locatario"]);
 
             // Realiza a alteração
-            if($this->objModelUsuario->update($put, ["id_usuario" => $id]) != false)
+            if($this->objModelLocatario->update($put, ["id_locatario" => $id]) != false)
             {
                 // Busca o objeto alterado
-                $objAlterado = $this->objModelUsuario
-                    ->get(["id_usuario" => $id])
+                $objAlterado = $this->objModelLocatario
+                    ->get(["id_locatario" => $id])
                     ->fetch(\PDO::FETCH_OBJ);
 
                 // Array de retorno
@@ -414,11 +306,11 @@ class Usuario extends Controller
 
     /**
      * Método responsável por receber o id de um determinadado
-     * usuario e deletar o mesmo do banco de dados.
+     * locatario e deletar o mesmo do banco de dados.
      * ------------------------------------------------------------
-     * @param $id [Id do usuário a ser deletado]
+     * @param $id [Id do locatario a ser deletado]
      * ------------------------------------------------------------
-     * @url api/usuario/delete/[ID]
+     * @url api/locatario/delete/[ID]
      * @method DELETE
      */
     public function delete($id)
@@ -432,22 +324,19 @@ class Usuario extends Controller
         $usuario = $this->objHelperSeguranca->security();
 
         // Busca o objeto a ser deletado
-        $obj = $this->objModelUsuario
-            ->get(["id_usuario" => $id])
+        $obj = $this->objModelLocatario
+            ->get(["id_locatario" => $id])
             ->fetch(\PDO::FETCH_OBJ);
 
         // Verifica se encontrou o objeto informado
         if(!empty($obj))
         {
-            // Verifica se não esta tentando se auto deletar
-            if($usuario->id_usuario != $obj->id_usuario)
+            // Verifica se o objeto possui vinculações
+            if($this->objModelContrato->get(["id_locatario" => $id])->rowCount() == 0)
             {
                 // Deleta o objeto
-                if($this->objModelUsuario->delete(["id_usuario" => $id]) != false)
+                if($this->objModelLocatario->delete(["id_locatario" => $id]) != false)
                 {
-                    // Remove a senha
-                    unset($obj->senha);
-
                     // Array de retorno
                     $dados = [
                         "tipo" => true, // Informa que deu certo
@@ -465,8 +354,8 @@ class Usuario extends Controller
             else
             {
                 // Msg
-                $dados = ["mensagem" => "Impossivel deletar seu próprio usuário."];
-            } // Error >> Impossivel deletar seu próprio usuário.
+                $dados = ["mensagem" => "Impossível deletar. O locatário possui contatos vinculados."];
+            } // Error >> Impossível deletar. O locatário possui contatos vinculados.
         }
         else
         {
@@ -479,4 +368,4 @@ class Usuario extends Controller
 
     } // End >> fun::delete()
 
-} // End >> Class::Usuario
+} // End >> Class::Locatario
