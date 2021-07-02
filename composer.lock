@@ -26,7 +26,6 @@
             "require-dev": {
                 "phpunit/phpunit": "@stable"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -53,10 +52,6 @@
                 "framework php",
                 "php"
             ],
-            "support": {
-                "issues": "https://github.com/igorcacerez/duugwork-system/issues",
-                "source": "https://github.com/igorcacerez/duugwork-system/tree/main"
-            },
             "time": "2021-06-15T12:33:06+00:00"
         }
     ],
@@ -70,5 +65,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "1.1.0"
 }

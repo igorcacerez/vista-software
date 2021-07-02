@@ -9,6 +9,7 @@
 namespace Controller;
 
 use DuugWork\Controller as CI_controller;
+use DuugWork\Helper\SendCurl;
 
 
 class Principal extends CI_controller
@@ -22,16 +23,73 @@ class Principal extends CI_controller
     }
 
 
+    public function _index()
+    {
+        $dados = array(
+            'fields'    =>
+                array(
+                    'Codigo'
+
+                ),
+            'filter' => array(
+                "ValorLocacao" => array(1000, 10000)
+            )
+        );
+
+        $key         =  TOKEN_VISTA; //Informe sua chave aqui
+        $postFields  =  json_encode( $dados );
+        $url         =  'http://sandbox-rest.vistahost.com.br/imoveis/listar?key=' . $key;
+        $url        .=  '&pesquisa=' . $postFields;
+
+        $ch = curl_init($url);
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER , array( 'Accept: application/json' ) );
+        $result = curl_exec( $ch );
+
+        $result = json_decode( $result, true );
+        print_r( $result );
+    }
+
+
     public function index()
     {
-        // Variavel
-        $texto = "Hello World";
+        // Instancia o objeto de requisição
+        $objHelperSend = new SendCurl();
 
-        // Array de variaveis que deve ser exibida na view
-        $dados = ["ola" => $texto];
+        // Informações a ser retornadas pelo
+        $informacoesBuscaApi = [
+            "fields" => [
+                "ValorLocacao", "ValorIptu", "ValorCondominio",
+                "Bairro", "Cidade", "Endereco", "Numero", "CEP", "UF"
+            ]
+        ];
 
-        // Chama a view
-        $this->view("index", $dados);
+        // Configura a url
+        $url = URL_API . "imoveis/detalhes?key=" . TOKEN_VISTA;
+        $url .= "&pesquisa=" . json_encode($informacoesBuscaApi);
+        $url .= "&imovel=00010301";
+
+        $objHelperSend->setHeader("Accept", "application/json");
+
+        $resposta = $objHelperSend->resquest($url, null, "GET", true);
+
+        $this->debug($resposta);
+    }
+
+
+    public function listaCampos()
+    {
+        $key         =  TOKEN_VISTA; //Informe sua chave aqui
+        $url         =  'http://sandbox-rest.vistahost.com.br/imoveis/listarcampos?key=' . $key;
+
+        $ch = curl_init($url);
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER , array( 'Accept: application/json' ) );
+        $result = curl_exec( $ch );
+
+        $result = json_decode( $result, true );
+
+        $this->debug($result);
     }
 
 

@@ -46,11 +46,12 @@ CREATE TABLE contrato(
     taxaAdministracao DOUBLE NOT NULL DEFAULT 0,
     valorAluguel FLOAT NOT NULL DEFAULT 0,
     valorCondominio FLOAT NOT NULL DEFAULT 0,
-    valorIPTU FLOAT NOT NULL DEFAULT 0,
+    valorIptu FLOAT NOT NULL DEFAULT 0,
 
     cep VARCHAR(10) NULL DEFAULT NULL,
     bairro VARCHAR(150) NULL DEFAULT NULL,
     cidade VARCHAR(150) NOT NULL,
+    estado VARCHAR(2) NOT NULL,
     endereco VARCHAR(150) NOT NULL,
     numero VARCHAR(10) NULL DEFAULT NULL,
 
