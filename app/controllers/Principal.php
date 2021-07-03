@@ -6,113 +6,125 @@
  * Time: 18:29
  */
 
+// NameSpace
 namespace Controller;
 
+// Importações
 use DuugWork\Controller as CI_controller;
-use DuugWork\Helper\SendCurl;
 use Helper\Apoio;
 
 
+/**
+ * Classe responsável por conter métodos que construam
+ * as paginas principais do site.
+ *
+ * Class Principal
+ * @package Controller
+ */
 class Principal extends CI_controller
 {
+    // Objetos
+    private $objHelperApoio;
 
     // Método construtor
     function __construct()
     {
         // Carrega o contrutor da classe pai
         parent::__construct();
-    }
+
+        // Instancia os objetos
+        $this->objHelperApoio = new Apoio();
+
+    } // End >> fun::__construct()
 
 
-    public function _index()
+    /**
+     * Método responsável por configurar a página de login e de logout.
+     * ------------------------------------------------------------------
+     * @param null $email [Email do usuario de logout]
+     * ------------------------------------------------------------------
+     * @url login ou logout/[EMAIL]
+     * @method GET
+     */
+    public function login($email = null)
     {
-        $dados = array(
-            'fields'    =>
-                array(
-                    'Codigo'
+        // Variaveis
+        $dados = null; // Armazena o conteudo que será exibido na view
+        $seo = null; // Armazena o conteudo de Seo e Smo
 
-                ),
-            'filter' => array(
-                "ValorLocacao" => array(1000, 10000)
-            )
-        );
+        // Verifica se não possui session ativa
+        if(empty($_SESSION["usuario"]))
+        {
+            // Recupera o conteudo de seo
+            $seo = $this->getSEO(
+                // SEO
+                [
+                    "title" => "Vista Soft | Acesso Restrito",
+                    "description" => "Página de acesso restrito do sistema Vista Software."
+                ],
 
-        $key         =  TOKEN_VISTA; //Informe sua chave aqui
-        $postFields  =  json_encode( $dados );
-        $url         =  'http://sandbox-rest.vistahost.com.br/imoveis/listar?key=' . $key;
-        $url        .=  '&pesquisa=' . $postFields;
+                // SMO
+                [
+                    "url" => BASE_URL . "login",
+                    "title" => "Vista Soft | Acesso Restrito",
+                    "description" => "Página de acesso restrito do sistema Vista Software."
+                ]
+            );
 
-        $ch = curl_init($url);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER , array( 'Accept: application/json' ) );
-        $result = curl_exec( $ch );
+            // Configura os dados de exibição
+            $dados = [
+                "seo" => $seo["seo"],
+                "smo" => $seo["smo"],
+                "email" => $email,
+                "js" => ["modulos" => ["Usuario"]] // Modulo JS a ser utilizado na página
+            ];
 
-        $result = json_decode( $result, true );
-        print_r( $result );
-    }
+            // Chama a view
+            $this->view("painel/acesso/login", $dados);
+        }
+        else
+        {
+            // Redirecioan
+            header("Location: " . BASE_URL . "painel");
+        } // Redireciona para o painel
+
+    } // End >> fun::login()
 
 
-    public function Aindex()
+    /**
+     * Método responsável por limpar a session do php e do
+     * javascript. Redireciona o usuario para a página de login
+     * ------------------------------------------------------------------
+     * @url sair
+     * @method GET
+     */
+    public function sair()
     {
-        // Instancia o objeto de requisição
-        $objHelperSend = new SendCurl();
+        // Destroi a session
+        session_destroy();
 
-        // Informações a ser retornadas pelo
-        $informacoesBuscaApi = [
-            "fields" => [
-                "ValorLocacao", "ValorIptu", "ValorCondominio",
-                "Bairro", "Cidade", "Endereco", "Numero", "CEP", "UF"
-            ]
-        ];
+        // Chama a página de sair
+        $this->view("painel/acesso/sair");
+    } // End >> fun::sair()
 
-        // Configura a url
-        $url = URL_API . "imoveis/detalhes?key=" . TOKEN_VISTA;
-        $url .= "&pesquisa=" . json_encode($informacoesBuscaApi);
-        $url .= "&imovel=00010301";
-
-        $objHelperSend->setHeader("Accept", "application/json");
-
-        $resposta = $objHelperSend->resquest($url, null, "GET", true);
-
-        $this->debug($resposta);
-    }
-
-
-    public function listaCampos()
-    {
-        $key         =  TOKEN_VISTA; //Informe sua chave aqui
-        $url         =  'http://sandbox-rest.vistahost.com.br/imoveis/listarcampos?key=' . $key;
-
-        $ch = curl_init($url);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER , array( 'Accept: application/json' ) );
-        $result = curl_exec( $ch );
-
-        $result = json_decode( $result, true );
-
-        $this->debug($result);
-    }
 
     public function index()
     {
-        $a = new Apoio();
-//
-//        $d = cal_days_in_month(CAL_GREGORIAN, 7, 2021);
-//
-//        echo $d . "<br>";
-//
-//        echo ($d - date("d"));
-//
-//        echo $a->diasDatas(date("Y-m-d"), "2021-08-01");
 
-       // echo date("Y-m-d", strtotime("+0 days"));
+    } // End >> fun::index()
 
 
-        $primeira = "2021-07-02";
+    public function painel()
+    {
+        // Variaveis
+        $dados = null; // Retorno para a view
+        $usuario = null; // Usuario logado
 
-       $b = date("Y-m", strtotime("+1 month", strtotime($primeira))) . "-01";
+        // Recupera o usuario logado
+        $usuario = $this->objHelperApoio->seguranca();
 
-       echo $a->diasDatas("2021-07-10", $b);
-    }
+
+
+    } // End >> fun::painel()
 
 } // END::Class Principal

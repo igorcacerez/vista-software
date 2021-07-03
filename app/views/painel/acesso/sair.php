@@ -13,7 +13,7 @@
         localStorage.clear();
 
         setTimeout(() => {
-            location.href = "<?= BASE_URL; ?>login/<?= $hash ?>";
+            location.href = "<?= BASE_URL; ?>login";
         }, 300);
     </script>
 

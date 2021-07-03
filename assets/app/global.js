@@ -2,8 +2,8 @@
 
 // Dados importantes
 var Dados = {
-    "url": "http://localhost/git/",
-    "urlApi": "http://localhost/git/"
+    "url": "http://localhost/git/vista-software/",
+    "urlApi": "http://localhost/git/vista-software/api/"
 }
 
 
