@@ -10,6 +10,7 @@ namespace Controller;
 
 use DuugWork\Controller as CI_controller;
 use DuugWork\Helper\SendCurl;
+use Helper\Apoio;
 
 
 class Principal extends CI_controller
@@ -51,7 +52,7 @@ class Principal extends CI_controller
     }
 
 
-    public function index()
+    public function Aindex()
     {
         // Instancia o objeto de requisição
         $objHelperSend = new SendCurl();
@@ -92,5 +93,29 @@ class Principal extends CI_controller
         $this->debug($result);
     }
 
+    public function index()
+    {
+//        $a = new Apoio();
+//
+//        $d = cal_days_in_month(CAL_GREGORIAN, 7, 2021);
+//
+//        echo $d . "<br>";
+//
+//        echo ($d - date("d"));
+//
+//        echo $a->diasDatas(date("Y-m-d"), "2021-08-01");
+
+       // echo date("Y-m-d", strtotime("+0 days"));
+
+
+        $primeira = "2021-07-02";
+
+        echo date("Y-m-d", strtotime("+10 days", strtotime($primeira)));
+
+        if(date("d",strtotime($primeira)) > 1)
+        {
+            echo "Aaaa";
+        }
+    }
 
 } // END::Class Principal

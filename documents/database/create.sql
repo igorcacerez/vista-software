@@ -67,6 +67,8 @@ CREATE TABLE contrato(
 CREATE TABLE mensalidadeRepasse(
     id_mensalidadeRepasse INT NOT NULL AUTO_INCREMENT,
     id_contrato INT NOT NULL,
+    valorTotal FLOAT NOT NULL DEFAULT 0,
+    valorRepasse FLOAT NOT NULL DEFAULT 0,
     dataVencimento DATE NOT NULL,
     dataRepasse DATE NOT NULL,
     pago BOOLEAN NOT NULL DEFAULT false,

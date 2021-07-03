@@ -5,6 +5,7 @@ namespace Controller\Api;
 
 // Importações
 use DuugWork\Helper\SendCurl;
+use Helper\Apoio;
 use Helper\Seguranca;
 use Model\MensalidadeRepasse;
 
@@ -233,9 +234,121 @@ class Contrato extends \DuugWork\Controller
 
 
 
+
+    /**
+     * Método responsável por realizar todos os calculos necessário para
+     * gerar as 12 mensalidades de um contrato.
+     *--------------------------------------------------------------------
+     * Regra:
+     *
+     * O vencimento é sempre dia 01 do mês, portanto se a data de início
+     * do contrato não for dia 01 o primeiro aluguel será proporcional aos
+     * dias utilizados.
+     * --------------------------------------------------------------------
+     * @param $contrato
+     * @return bool
+     * @throws \Exception
+     */
     private function gerarMensalidades($contrato)
     {
+        // Variaveis
+        $salva = null; // Array de inserção no banco de dados
+        $valorTotal = null; // Valor total da mensalidade
+        $valorRepasse = null; // Valor a ser repassado ao locador
+        $dataMensalidade = null; // Data de vencimento da mensalidade
+        $valorTotalPorDia = null; // Valor total por dia
+        $valorRepassePorDia = null; // Valor do repasse por dia
+        $diasMes = null; // Numero de dias que possui o mês (30, 31, 28 ou 29)
+        $diasUtilizados = null; // Total de dias que o cliente utilizou o imovel no mes
+        $locador = null; // Armazena o objeto do locador do contrato
+        $obj = null; // Armazena o objeto mensalidadeRepasse adicionado no banco
+
+        // Busca o locador do contrato
+        $locador = $this->objModelLocador
+            ->get(["id_locador" => $contrato->id_locador])
+            ->fetch(\PDO::FETCH_OBJ);
+
+        // Armazena o valor total
+        $valorTotal = ($contrato->valorAluguel + $contrato->valorIptu + $contrato->valorCondominio);
+
+        // Realiza o calculo do repasse
+        // Sera repassa o valor do IPTU + O valor do aluguel - a taxa administrativa (porcentagem)
+        $valorRepasse = $contrato->valorIptu;
+        $valorRepasse += ($contrato->valorAluguel - ($contrato->valorAluguel * ($contrato->taxaAdministrativa / 100)));
+
+        // Data da primeira mensalidade
+        $dataMensalidade = date("Y-m-") . "01";
+
+        // Verifica se o dia inicial do contrato é maior que 1
+        if(date("d",strtotime($dataMensalidade)) > 1)
+        {
+            // Utiliza o objeto de Apoio
+            $objHelperApoio = new Apoio();
+
+            // Quantos dias possui o mês de inicio do contrato
+            $diasMes = cal_days_in_month(
+                CAL_GREGORIAN,
+                date("m",strtotime($contrato->dataInicio)),
+                date("Y",strtotime($contrato->dataInicio))
+            );
+
+            // Realiza o calculo de cada item por dia
+            $valorTotalPorDia = ($valorTotal / $diasMes);
+            $valorRepassePorDia = ($valorRepasse / $diasMes);
+
+            // Realiza o calculo de quantos dias o cliente utilizou
+            $diasUtilizados = $objHelperApoio->diasDatas($contrato->dataInicio, $dataMensalidade);
+
+            // Realiza o calculo relativo aos dias utilizados do valor total e repasse
+            // Adiciona os itens no array de inserção
+            $salva = [
+                "valorTotal" => ($valorTotalPorDia * $diasUtilizados),
+                "valorRepasse" => ($valorRepassePorDia * $diasUtilizados)
+            ];
+        }
+        else
+        {
+              // Inicia o array de inserção
+            $salva = [
+                "valorTotal" => $valorTotal,
+                "valorRepasse" => $valorRepasse
+            ];
+
+        } // O contrato inicia no dia 1, então possui a cobrança completa
+
+        // Adiciona o id do contrato no array de inserção
+        $salva["id_contrato"] = $contrato->id_contrato;
+
+        // Percorre o numero de mensalidades que deve ser gerado
+        for ($i = 0; $i <= 11; $i++)
+        {
+            // Realiza a soma para o vencimento
+            $dataMensalidade = date("Y-m-d", strtotime("+{$i} days", strtotime($dataMensalidade)));
+
+            // Adiciona ao array de inserção as datas de vencimento e repasse
+            $salva["dataVencimento"] = $dataMensalidade;
+            $salva["dataRepasse"] = date("Y-m-d", strtotime("+{$locador->diasRepasse} days"));
+
+            // Insere no banco de dados
+            $obj = $this->objModelMensalidadeRespasse
+                ->insert($salva);
+
+            // Verifica se deu algum erro
+            if($obj == false)
+            {
+                // Deleta todas as mensalidades geradas
+                $this->objModelMensalidadeRespasse
+                    ->delete(["id_contrato" => $contrato->id_contrato]);
+
+                // Informa do erro
+                throw new \Exception("Ocorreu um erro ao gerar as mensalidades.");
+            }
+        }
+
+        // Retorno de sucesso
+        return true;
 
     } // End >> fun::gerarMensalidades()
+
 
 } // End >> Class::Contrato

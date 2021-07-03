@@ -44,4 +44,21 @@ class Apoio
         return $numero . $array[$cont];
     }
 
+
+    /**
+     * DIAS ENTRE 02 DATAS
+     * @author Norberto ALcântara
+     * @copyright (c) Célula Nerd, 2019
+     *
+     * @param $data_inicial
+     * @param $data_final
+     * @return int
+     */
+    public function diasDatas($data_inicial, $data_final)
+    {
+        $diferenca = strtotime($data_final) - strtotime($data_inicial);
+        $dias = floor($diferenca / (60 * 60 * 24));
+        return $dias;
+    } // End >> diasDatas()
+
 } // End >> Class::Apoio()

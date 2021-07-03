@@ -175,7 +175,7 @@ class Locador extends \DuugWork\Controller
         // Seguranca
         $usuario = $this->objHelperSeguranca->security();
 
-        // Recupera od dados post
+        // Recupera os dados post
         $post = $_POST;
 
         // Verifica se informou os dados obrigatórios
