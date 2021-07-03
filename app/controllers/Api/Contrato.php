@@ -43,6 +43,162 @@ class Contrato extends \DuugWork\Controller
 
 
     /**
+     * Método responsável por realizar a uma busca de um
+     * determinado contrato, que possua o id informado.
+     * ------------------------------------------------------------
+     * @param $id [Id do contrato]
+     * ------------------------------------------------------------
+     * @url api/contrato/get/[ID]
+     * @method GET
+     */
+    public function get($id)
+    {
+        // Variaveis
+        $dados = null; // Retorno para a view
+        $usuario = null; // Usuario logado
+        $obj = null; // Contrato Encontrado
+
+        // Seguranca
+        $usuario = $this->objHelperSeguranca->security();
+
+        // Realiza a busca do contrato
+        $obj = $this->objModelContrato
+            ->get(["id_contrato" => $id])
+            ->fetch(\PDO::FETCH_OBJ);
+
+        // Verifica se encontrou
+        if(!empty($obj))
+        {
+            // Busca o locador
+            $obj->locador = $this->objModelLocador
+                ->get(["id_locador" => $obj->id_locador])
+                ->fetch(\PDO::FETCH_OBJ);
+
+            // Busca o locatário
+            $obj->locatario = $this->objModelLocatario
+                ->get(["id_locatario" => $obj->id_locatario])
+                ->fetch(\PDO::FETCH_OBJ);
+
+            // Busca todas as mensalidades
+            $obj->mensalidades = $this->objModelMensalidadeRespasse
+                ->get(["id_contrato" => $obj->id_contrato], "id_contrato ASC")
+                ->fetchAll(\PDO::FETCH_OBJ);
+        }
+
+        // Retorno
+        $dados = [
+            "tipo" => true, // Informa que a requisição aconteceu
+            "code" => 200, // Status HTTP
+            "objeto" => (!empty($obj) ? $obj : false) // Retorna o objeto ou false
+        ];
+
+        // Retorno para a view
+        $this->api($dados);
+
+    } // End >> fun::get()
+
+
+    /**
+     * Método responsável por realizar a uma busca de contratos
+     * podendo filtrar por condições, ordenar e utilziar limites
+     * de exibição por página.
+     * ------------------------------------------------------------
+     * @url api/contrato/get
+     * @method GET
+     */
+    public function getAll()
+    {
+        // Variaveis
+        $dados = null; // Retorno para a view
+        $usuario = null; // Usuario logado
+        $obj = null; // Locadores Encontrados
+        $ordem = null; // Ordem de exibição (ORDER BY)
+        $where = null; // Condições para busca
+        $pag = null; // Pagina atual para listagem
+        $limite = null; // Numero limite de exibições por página
+        $inicio = null; // Item inicial
+        $orderBy = null; // Item pelo qual deve ordenar
+        $orderTipo = null;  // Tipo da ordenação (ASC ou DESC)
+        $numPag = null; // Numero total de paginas existente para a busca
+
+        // Seguranca
+        $usuario = $this->objHelperSeguranca->security();
+
+        // Variaveis Paginação
+        $pag = (isset($_GET["pag"])) ? $_GET["pag"] : 1;
+        $limite = (isset($_GET["limit"])) ? $_GET["limit"] : NUM_PAG;
+
+        // Variveis da busca
+        $orderBy = (isset($_GET["order_by"])) ? $_GET["order_by"] : null;
+        $orderTipo = (isset($_GET["order_by_type"])) ? $_GET["order_by_type"] : "ASC";
+
+        // Verifica se retornou o where
+        $where = (isset($_GET["where"])) ? $_GET["where"] : null;
+
+        // Verifica se foi informado a ordem
+        if($orderBy != null)
+        {
+            // cria a ordem
+            $ordem = $orderBy . " " . $orderTipo;
+        }
+
+
+        // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
+        // por página, exemplo 0 à 10, 11 à 20 e assim por diante
+        $inicio = ($pag * $limite) - $limite;
+
+        // Realiza a busca com páginação
+        $obj = $this->objModelContrato
+            ->get($where, $ordem, ($inicio . "," . $limite))
+            ->fetchAll(\PDO::FETCH_OBJ);
+
+        // Total de resultados encontrados sem o
+        // limite
+        $total = $this->objModelContrato
+            ->get($where)
+            ->rowCount();
+
+        // Verifica se está retornando algo
+        if($total > 0)
+        {
+            // Percorre os objetos
+            foreach ($obj as $contrato)
+            {
+                // Busca o locador
+                $contrato->locador = $this->objModelLocador
+                    ->get(["id_locador" => $contrato->id_locador])
+                    ->fetch(\PDO::FETCH_OBJ);
+
+                // Busca o locatário
+                $contrato->locatario = $this->objModelLocatario
+                    ->get(["id_locatario" => $contrato->id_locatario])
+                    ->fetch(\PDO::FETCH_OBJ);
+            }
+        }
+
+        // Realiza o calculo das páginas
+        $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+
+        // Monta o array de retorno
+        $dados = [
+            "tipo" => true,
+            "code" => 200,
+            "objeto" => [
+                "itens" => $obj,
+                "total" => $total,
+                "pagina" => $pag,
+                "numPaginas" => $numPag
+            ]
+        ];
+
+        // Retorno
+        $this->api($dados);
+
+    } // End >> fun::getAll()
+
+
+
+    /**
      * Método responsável por:
      *
      *  - Receber as informações ncessárias para cadastro de um
@@ -234,6 +390,141 @@ class Contrato extends \DuugWork\Controller
 
 
 
+    /**
+     * Método responsável por receber o id de um determinadado
+     * contrato e deletar o mesmo do banco de dados.
+     * ------------------------------------------------------------
+     * @param $id [Id do contrato a ser deletado]
+     * ------------------------------------------------------------
+     * @url api/contrato/delete/[ID]
+     * @method DELETE
+     */
+    public function delete($id)
+    {
+        // Variaveis
+        $usuario = null; // Usuario logado
+        $dados = null; // Retorno para a view
+        $obj = null; // Objeto a ser deletado
+
+        // Recupera o usuário logado
+        $usuario = $this->objHelperSeguranca->security();
+
+        // Busca o objeto a ser deletado
+        $obj = $this->objModelContrato
+            ->get(["id_contrato" => $id])
+            ->fetch(\PDO::FETCH_OBJ);
+
+        // Verifica se encontrou o objeto informado
+        if(!empty($obj))
+        {
+            // Deleta as mensalidades
+            if($this->objModelMensalidadeRespasse->delete(["id_contrato" => $id]) != false)
+            {
+                // Deleta o objeto
+                if($this->objModelContrato->delete(["id_locador" => $id]) != false)
+                {
+                    // Array de retorno
+                    $dados = [
+                        "tipo" => true, // Informa que deu certo
+                        "code" => 200, // codigo http
+                        "mensagem" => "Contrato deletado com sucesso.", // Mensagem de exibição
+                        "objeto" => $obj // Retorna o objeto deletado
+                    ];
+                }
+                else
+                {
+                    // Msg
+                    $dados = ["mensagem" => "Ocorre um erro ao tentar deletar."];
+                } // Error >> Ocorre um erro ao tentar deletar.
+            }
+            else
+            {
+                // Msg
+                $dados = ["mensagem" => "Ocorreu um erro ao deletar as mensalidades."];
+            } // Error >> Ocorreu um erro ao deletar as mensalidades.
+        }
+        else
+        {
+            // Msg
+            $dados = ["mensagem" => "O item informado não existe ou já foi deletado."];
+        } // Error >> O item informado não existe ou já foi deletado.
+
+        // Retorno
+        $this->api($dados);
+
+    } // End >> fun::delete()
+
+
+    public function updateItem($tipo, $id)
+    {
+        // Variaveis
+        $dados = null;
+        $obj = null;
+        $usuario = null;
+
+        // Seguranca
+        $usuario = $this->objHelperSeguranca->security();
+
+        // Verifica se o tipo é aceito
+        if($tipo == "mensalidade" || $tipo == "repasse")
+        {
+            // Busca o objeto
+            $obj = $this->objModelMensalidadeRespasse
+                ->get(["id_mensalidadeRepasse" => $id])
+                ->fetch(\PDO::FETCH_OBJ);
+
+            // Verifica se foi encontrado
+            if(!empty($obj))
+            {
+                // Verifica se ativar um repasse -----------------------
+                if($obj->repasse == false && $tipo == "repasse")
+                {
+                    // Verifica se ainda não foi pago
+                    if($obj->pago == false)
+                    {
+                        // Encerra e informa que não pode realizar um
+                        // repasse caso a mensalidade não seja paga
+                        $this->api(["mensagem" => "Para realizar um repasse primeiro a mensalidade deve ser paga."]);
+                    }
+                }
+                // -----------------------------------------------------
+
+                // Verifica se vai desativar um pagamento
+                if($obj->pago == true && $tipo == "pagamento")
+                {
+                    // Verifica se o repasse foi feito
+                    if($obj->repasse == true)
+                    {
+                        // Encerra e informa que não pode cancelar um pagamento de
+                        // mensalidado caso o repasse tenha cido efetuado.
+                        $this->api(["mensagem" => "Não é possível cancelar um pagamento de mensalidade, caso o repasse tenha sido efetuado."]);
+                    }
+                }
+
+                /*
+                 *
+                 *  Continua aqui
+                 *
+                 */
+            }
+            else
+            {
+                // Msg
+                $dados = ["mensagem" => "O item informado não existe."];
+            } // Error >> O item informado não existe.
+        }
+        else
+        {
+             // Msg
+            $dados = ["mensagem" => "O tipo informado não é válidado."];
+        } // Error >> O tipo informado não é válidado.
+
+        // Retorno
+        $this->api($dados);
+
+    } // End >> fun::updateMensalidade()
+
+
 
     /**
      * Método responsável por realizar todos os calculos necessário para
@@ -318,6 +609,10 @@ class Contrato extends \DuugWork\Controller
 
         // Adiciona o id do contrato no array de inserção
         $salva["id_contrato"] = $contrato->id_contrato;
+
+        // Força os valores terem no maximo 2 digitos após a virgula
+        $salva["valorTotal"] = number_format($salva["valorTotal"], 2, ".", "");
+        $salva["valorRepasse"] = number_format($salva["valorRepasse"], 2, ".", "");
 
         // Percorre o numero de mensalidades que deve ser gerado
         for ($i = 0; $i <= 11; $i++)
