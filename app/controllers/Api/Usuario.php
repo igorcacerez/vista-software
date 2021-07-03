@@ -98,7 +98,7 @@ class Usuario extends Controller
         else
         {
             // Msg de retorno
-            $dados = ["mensagem" => "Usuario não encontrado."];
+            $dados = ["mensagem" => "E-mail ou senha informados estão incorretos."];
         } // Error >> Usuario não encontrado.
 
         // Retorno para a view
