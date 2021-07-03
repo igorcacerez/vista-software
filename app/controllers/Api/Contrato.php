@@ -421,7 +421,7 @@ class Contrato extends \DuugWork\Controller
             if($this->objModelMensalidadeRespasse->delete(["id_contrato" => $id]) != false)
             {
                 // Deleta o objeto
-                if($this->objModelContrato->delete(["id_locador" => $id]) != false)
+                if($this->objModelContrato->delete(["id_contrato" => $id]) != false)
                 {
                     // Array de retorno
                     $dados = [
@@ -520,7 +520,7 @@ class Contrato extends \DuugWork\Controller
                 if($tipo == "repasse")
                 {
                     // Configura o array de alteração
-                    $altera["reasse"] = ($obj->repasse == true) ? false : true;
+                    $altera["repasse"] = ($obj->repasse == true) ? false : true;
 
                     // Mensagem
                     $msg = "Repasse" . (($obj->repasse == true) ? " cancelado " : " realizado ") . "com sucesso.";
@@ -531,7 +531,7 @@ class Contrato extends \DuugWork\Controller
                     $altera["pago"] = ($obj->pago == true) ? false : true;
 
                     // Msg
-                    $msg = "Pagamento da mensalidade" . (($obj->pago == true) ? " cancelado " : " realizado ") . "com sucesso";
+                    $msg = "Pagamento da mensalidade foi" . (($obj->pago == true) ? " cancelado " : " realizado ") . "com sucesso";
 
                 } // Nesse caso está alterando a mensalidade
 
@@ -620,13 +620,14 @@ class Contrato extends \DuugWork\Controller
         // Realiza o calculo do repasse
         // Sera repassa o valor do IPTU + O valor do aluguel - a taxa administrativa (porcentagem)
         $valorRepasse = $contrato->valorIptu;
-        $valorRepasse += ($contrato->valorAluguel - ($contrato->valorAluguel * ($contrato->taxaAdministrativa / 100)));
+        $valorRepasse += ($contrato->valorAluguel - ($contrato->valorAluguel * ($contrato->taxaAdministracao / 100)));
 
         // Data da primeira mensalidade
-        $dataMensalidade = date("Y-m-") . "01";
+        $dataMensalidade = date("Y-m", strtotime("+1 month", strtotime($contrato->dataInicio)));
+        $dataMensalidade .= "-01";
 
         // Verifica se o dia inicial do contrato é maior que 1
-        if(date("d",strtotime($dataMensalidade)) > 1)
+        if(date("d",strtotime($contrato->dataInicio)) > 1)
         {
             // Utiliza o objeto de Apoio
             $objHelperApoio = new Apoio();
@@ -672,8 +673,18 @@ class Contrato extends \DuugWork\Controller
         // Percorre o numero de mensalidades que deve ser gerado
         for ($i = 0; $i <= 11; $i++)
         {
-            // Realiza a soma para o vencimento
-            $dataMensalidade = date("Y-m-d", strtotime("+{$i} days", strtotime($dataMensalidade)));
+            // Verifica se é diferente da primeira mensalidade
+            if($i > 0)
+            {
+                // Realiza a soma para o vencimento
+                $dataMensalidade = date("Y-m-d", strtotime("+{$i} month", strtotime($dataMensalidade)));
+
+                // Adiciona o valor
+                // Força os valores terem no maximo 2 digitos após a virgula
+                $salva["valorTotal"] = number_format($valorTotal, 2, ".", "");
+                $salva["valorRepasse"] = number_format($valorRepasse, 2, ".", "");
+            }
+
 
             // Adiciona ao array de inserção as datas de vencimento e repasse
             $salva["dataVencimento"] = $dataMensalidade;

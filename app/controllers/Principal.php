@@ -95,7 +95,7 @@ class Principal extends CI_controller
 
     public function index()
     {
-//        $a = new Apoio();
+        $a = new Apoio();
 //
 //        $d = cal_days_in_month(CAL_GREGORIAN, 7, 2021);
 //
@@ -110,12 +110,9 @@ class Principal extends CI_controller
 
         $primeira = "2021-07-02";
 
-        echo date("Y-m-d", strtotime("+10 days", strtotime($primeira)));
+       $b = date("Y-m", strtotime("+1 month", strtotime($primeira))) . "-01";
 
-        if(date("d",strtotime($primeira)) > 1)
-        {
-            echo "Aaaa";
-        }
+       echo $a->diasDatas("2021-07-10", $b);
     }
 
 } // END::Class Principal
