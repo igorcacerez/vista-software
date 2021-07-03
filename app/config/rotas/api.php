@@ -24,3 +24,13 @@ $Rotas->onGroup("api-locador","GET","get","getAll");
 $Rotas->onGroup("api-locador","POST","insert","insert");
 $Rotas->onGroup("api-locador","PUT","update/{p}","update");
 $Rotas->onGroup("api-locador","DELETE","delete/{p}","delete");
+
+
+// CONTRATO
+$Rotas->group("api-contrato","api/contrato","Api\Contrato");
+$Rotas->onGroup("api-contrato","GET","get/{p}","get");
+$Rotas->onGroup("api-contrato","GET","get","getAll");
+$Rotas->onGroup("api-contrato","POST","insert","insert");
+$Rotas->onGroup("api-contrato","DELETE","delete/{p}","delete");
+$Rotas->onGroup("api-contrato","PUT","pagar/{p}/{p}","updateStatusMensalidadeRepasse");
+
