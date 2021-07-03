@@ -12,7 +12,7 @@ use Model\MensalidadeRepasse;
 
 /**
  * Classe responsável por realizar todos os processos
- * da api do locador.
+ * da api do contrato.
  *
  * Class Contrato
  * @package Controller\Api
@@ -119,7 +119,8 @@ class Contrato extends \DuugWork\Controller
         $inicio = null; // Item inicial
         $orderBy = null; // Item pelo qual deve ordenar
         $orderTipo = null;  // Tipo da ordenação (ASC ou DESC)
-        $numPag = null; // Numero total de paginas existente para a busca
+        $numPag = 1; // Numero total de paginas existente para a busca
+        $limiteConfig = null; // Configuração do limite
 
         // Seguranca
         $usuario = $this->objHelperSeguranca->security();
@@ -142,14 +143,20 @@ class Contrato extends \DuugWork\Controller
             $ordem = $orderBy . " " . $orderTipo;
         }
 
+        // Verifica se possui limite informado
+        if($limite > 0)
+        {
+            // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
+            // por página, exemplo 0 à 10, 11 à 20 e assim por diante
+            $inicio = ($pag * $limite) - $limite;
 
-        // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
-        // por página, exemplo 0 à 10, 11 à 20 e assim por diante
-        $inicio = ($pag * $limite) - $limite;
+            // Configura o limite
+            $limiteConfig = "{$inicio},{$limite}";
+        }
 
         // Realiza a busca com páginação
         $obj = $this->objModelContrato
-            ->get($where, $ordem, ($inicio . "," . $limite))
+            ->get($where, $ordem, $limiteConfig)
             ->fetchAll(\PDO::FETCH_OBJ);
 
         // Total de resultados encontrados sem o
@@ -177,7 +184,11 @@ class Contrato extends \DuugWork\Controller
         }
 
         // Realiza o calculo das páginas
-        $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        if($limite != 0)
+        {
+            // Existe limite
+            $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        }
 
         // Monta o array de retorno
         $dados = [
@@ -454,130 +465,6 @@ class Contrato extends \DuugWork\Controller
 
     } // End >> fun::delete()
 
-
-    /**
-     * Método responsável por verificar qual o status atual
-     * de um item e alterar para o seu status oposto. É necessário
-     * realizar as válidações antes de alterar.
-     * ------------------------------------------------------------
-     * @param $tipo [Mensalidade ou Repasse]
-     * @param $id [Id da mensalidade ao ser alterada]
-     * ------------------------------------------------------------
-     * @url api/contrato/pagar/[TIPO]/[ID]
-     * @method PUT
-     */
-    public function updateStatusMensalidadeRepasse($tipo, $id)
-    {
-        // Variaveis
-        $dados = null; // Array de retorno
-        $obj = null; // objeto atual a ser alterado
-        $objAlterado = null; // objeto com as informações já alteradas
-        $usuario = null; // Usuario logado
-        $altera = null; // Array com os itens a ser alterados
-        $msg = null; // Mensagem personalizada em caso de sucesso.
-
-        // Seguranca
-        $usuario = $this->objHelperSeguranca->security();
-
-        // Verifica se o tipo é aceito
-        if($tipo == "mensalidade" || $tipo == "repasse")
-        {
-            // Busca o objeto
-            $obj = $this->objModelMensalidadeRespasse
-                ->get(["id_mensalidadeRepasse" => $id])
-                ->fetch(\PDO::FETCH_OBJ);
-
-            // Verifica se foi encontrado
-            if(!empty($obj))
-            {
-                // Verifica se vai ativar um repasse --------------------
-                if($obj->repasse == false && $tipo == "repasse")
-                {
-                    // Verifica se ainda não foi pago
-                    if($obj->pago == false)
-                    {
-                        // Encerra e informa que não pode realizar um
-                        // repasse caso a mensalidade não seja paga
-                        $this->api(["mensagem" => "Para realizar um repasse primeiro a mensalidade deve ser paga."]);
-                    }
-                }
-                // ------------------------------------------------------
-
-                // Verifica se vai desativar um pagamento ----------------
-                if($obj->pago == true && $tipo == "mensalidade")
-                {
-                    // Verifica se o repasse foi feito
-                    if($obj->repasse == true)
-                    {
-                        // Encerra e informa que não pode cancelar um pagamento de
-                        // mensalidado caso o repasse tenha cido efetuado.
-                        $this->api(["mensagem" => "Não é possível cancelar um pagamento de mensalidade, caso o repasse tenha sido efetuado."]);
-                    }
-                }
-                // -------------------------------------------------------
-
-                // Verifica qual campo que vai ser alterado
-                if($tipo == "repasse")
-                {
-                    // Configura o array de alteração
-                    $altera["repasse"] = ($obj->repasse == true) ? false : true;
-
-                    // Mensagem
-                    $msg = "Repasse" . (($obj->repasse == true) ? " cancelado " : " realizado ") . "com sucesso.";
-                }
-                else
-                {
-                    // Configura o array de alteração
-                    $altera["pago"] = ($obj->pago == true) ? false : true;
-
-                    // Msg
-                    $msg = "Pagamento da mensalidade foi" . (($obj->pago == true) ? " cancelado " : " realizado ") . "com sucesso";
-
-                } // Nesse caso está alterando a mensalidade
-
-                // Realiza a alteração no banco de dados
-                // E verifica se ocorreu tudo certo
-                if($this->objModelMensalidadeRespasse->update($altera, ["id_mensalidadeRepasse" => $id]) != false)
-                {
-                    // Busca o item recem alterado
-                    $objAlterado = $this->objModelMensalidadeRespasse
-                        ->get(["id_mensalidadeRepasse" => $id])
-                        ->fetch(\PDO::FETCH_OBJ);
-
-                    // Retorno de sucesso
-                    $dados = [
-                        "tipo" => true, // Informa que deu certo
-                        "code" => 200, // codigo http
-                        "mensagem" => $msg, // Mensagem de exibição
-                        "objeto" => [
-                            "antes" => $obj, // Objeto antes de ser alterado
-                            "atual" => $objAlterado // Objeto com as novas informações
-                        ]
-                    ];
-
-                }
-                else
-                {
-                    // Msg
-                    $dados = ["mensagem" => "Ocorreu um erro ao alterar status de pagamento."];
-                } // Error >> Ocorreu um erro ao alterar status de pagamento.
-            }
-            else
-            {
-                // Msg
-                $dados = ["mensagem" => "O item informado não existe."];
-            } // Error >> O item informado não existe.
-        }
-        else
-        {
-             // Msg
-            $dados = ["mensagem" => "O tipo informado não é válidado."];
-        } // Error >> O tipo informado não é válidado.
-
-        // Retorno
-        $this->api($dados);
-
-    } // End >> fun::updateStatusMensalidadeRepasse()
 
 
 
