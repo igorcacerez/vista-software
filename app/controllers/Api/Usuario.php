@@ -383,6 +383,10 @@ class Usuario extends Controller
                     ->get(["id_usuario" => $id])
                     ->fetch(\PDO::FETCH_OBJ);
 
+                // Remove as senhas
+                unset($obj->senha);
+                unset($objAlterado->senha);
+
                 // Array de retorno
                 $dados = [
                     "tipo" => true, // Informa que deu certo
