@@ -20,7 +20,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                            <i class="ni ni-active-40"></i>
+                                            <i class="ni ni-chart-pie-35"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-pie-35"></i>
+                                            <i class="fas fa-user-friends"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-light text-uppercase ls-1 mb-1">ÚLTIMOS MESSES</h6>
+                                <h6 class="text-light text-uppercase ls-1 mb-1">ÚLTIMOS MESES</h6>
                                 <h5 class="h3 text-white mb-0">Lucro da Imobiliária</h5>
                             </div>
                         </div>
@@ -190,10 +190,8 @@
                                         </td>
                                         <td>
                                             <button type="button"
-                                                    class="btn btn-success pagarMensalidade"
-                                                    data-id="<?= $mensalidade->id_mensalidadeRepasse; ?>"
-                                                    data-pago="0"
-                                                    data-acao="remover">PAGAR</button>
+                                                    class="btn btn-success pagarMensalidadeRemoveLinha"
+                                                    data-id="<?= $mensalidade->id_mensalidadeRepasse; ?>">PAGAR</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

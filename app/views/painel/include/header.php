@@ -50,42 +50,42 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link active" href="<?= BASE_URL; ?>painel">
-                            <i class="ni ni-tv-2 text-primary"></i>
+                            <i class="ni ni-chart-pie-35 text-black-50"></i>
                             <span class="nav-link-text">Painel</span>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL; ?>locadores">
-                            <i class="ni ni-planet text-orange"></i>
+                            <i class="fas fa-user-tie text-black-50"></i>
                             <span class="nav-link-text">Proprietários</span>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL; ?>locatarios">
-                            <i class="ni ni-pin-3 text-primary"></i>
-                            <span class="nav-link-text">Clientes</span>
+                            <i class="fas fa-user-friends text-black-50"></i>
+                            <span class="nav-link-text">Locatários</span>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL; ?>contratos">
-                            <i class="ni ni-single-02 text-yellow"></i>
+                            <i class="ni ni-single-copy-04 text-black-50"></i>
                             <span class="nav-link-text">Contratos</span>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL; ?>usuarios">
-                            <i class="ni ni-bullet-list-67 text-default"></i>
+                            <i class="ni ni-single-02 text-black-50"></i>
                             <span class="nav-link-text">Usuários</span>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL; ?>sair">
-                            <i class="ni ni-key-25 text-info"></i>
+                            <i class="fas fa-sign-out-alt text-black-50"></i>
                             <span class="nav-link-text">Sair</span>
                         </a>
                     </li>

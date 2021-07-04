@@ -259,7 +259,7 @@ class Principal extends CI_controller
 
             // Js a ser carregados
             "js" => [
-                "modulos" => ["Usuario","Grafico"], // Modulo JS a ser utilizado na página
+                "modulos" => ["Mensalidade","Grafico"], // Modulo JS a ser utilizado na página
                 "plugins" => [
                     "chart.js/dist/Chart.min",
                     "chart.js/dist/Chart.extension"
