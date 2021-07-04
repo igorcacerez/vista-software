@@ -1,6 +1,97 @@
 import Global from "../global.js"
 
 
+/**
+ * Método responsável por enviar a requisição de
+ * inserção de locador para a api.
+ */
+$("#formAdicionarProprietario").on("submit", function () {
+
+    // Não atualiza a página
+    event.preventDefault();
+
+    // Recupera o formulário enviado
+    var form = new FormData(this);
+
+    // Bloqueia o formulário
+    $(this).addClass("bloqueiaForm");
+
+    // Recupera as informações para requisição
+    var url = Global.config.urlApi + "locador/insert";
+    var token = Global.session.get("token").token;
+
+    // Realiza a requisição
+    Global.enviaApi("POST", url, form, token)
+        .then((data) => {
+
+            // Informa que deu certo
+            Global.setSuccess(data.mensagem);
+
+            // Limpa o formulário
+            Global.limparFormulario("#formAdicionarProprietario");
+
+            // Remove o bloqueio
+            $(this).removeClass("bloqueiaForm");
+
+        })
+        .catch((e) => {
+            // Remove o bloqueio
+            $(this).removeClass("bloqueiaForm");
+        });
+
+    // Força para não atualizar a página
+    return false;
+
+});
+
+
+/**
+ * Método responsável por enviar a requisição de
+ * alteração para a api.
+ */
+$("#formAlterarProprietario").on("submit", function () {
+
+    // Não atualiza a página
+    event.preventDefault();
+
+    // Recupera o formulário enviado
+    var form = new FormData(this);
+
+    // Bloqueia o formulário
+    $(this).addClass("bloqueiaForm");
+
+    // Recupera o id
+    var id = $(this).data("id");
+
+    // Recupera as informações para requisição
+    var url = Global.config.urlApi + "locador/update/" + id;
+    var token = Global.session.get("token").token;
+
+    // Realiza a requisição
+    Global.enviaApi("PUT", url, form, token)
+        .then((data) => {
+
+            // Informa que deu certo
+            Global.setSuccess(data.mensagem);
+
+            // Limpa o formulário
+            Global.limparFormulario("#formAlterarProprietariosss");
+
+            // Remove o bloqueio
+            $(this).removeClass("bloqueiaForm");
+
+        })
+        .catch((e) => {
+            // Remove o bloqueio
+            $(this).removeClass("bloqueiaForm");
+        });
+
+    // Força para não atualizar a página
+    return false;
+
+});
+
+
 
 /**
  * Carrega a tabela de listagem após o html todo

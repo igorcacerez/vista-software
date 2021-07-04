@@ -15,7 +15,7 @@
                             <h3 class="mb-0">Todos os proprietários </h3>
                         </div>
                         <div class="col-4 text-right">
-                            <a href="<?= BASE_URL; ?>locatario/inserir" class="btn btn-sm btn-primary">Adicionar</a>
+                            <a href="<?= BASE_URL; ?>locador/inserir" class="btn btn-sm btn-primary">Adicionar</a>
                         </div>
                     </div>
                 </div>

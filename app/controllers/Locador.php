@@ -26,11 +26,18 @@ class Locador  extends Controller
     } // End >> fun::__construct()
 
 
+    /**
+     * Método responsável por configurar a página que irá
+     * listar todos os locadores.
+     * ------------------------------------------------------------
+     * @method GET
+     * @url locadores
+     */
     public function listar()
     {
         // Variaveis
-        $dados = null;
-        $usuario = null;
+        $dados = null; // Dados a serem exibidos na view
+        $usuario = null; // Usuario logado
 
         // Recupera o usuario logado
         $usuario = $this->objHelperApoio->seguranca();
@@ -61,6 +68,105 @@ class Locador  extends Controller
 
 
     /**
+     * Método responsável por configurar a página que
+     * possui o formulário de cadatro para um novo
+     * locador no sistema.
+     * ------------------------------------------------------------
+     * @method GET
+     * @url locador/inserir
+     */
+    public function inserir()
+    {
+        // Variaveis
+        $dados = null; // Dados a serem exibidos na view
+        $usuario = null; // Usuario logado
+
+        // Recupera o usuário logado
+        $usuario = $this->objHelperApoio->seguranca();
+
+        // Dados a serem enviados para a view
+        $dados = [
+            "titulo" => "Vista Software | Adicionar Proprietário",
+            "usuario" => $usuario,
+
+            // Js
+            "js" => [
+                "modulos" => ["Locador"]
+            ]
+        ];
+
+        // Chama a view
+        $this->view("painel/locador/inserir", $dados);
+
+    } // End >> fun::inserir()
+
+
+    /**
+     * Método responsável por busca o locador pelo id informado
+     * e configurar a página de alteração do mesmo.
+     * ------------------------------------------------------------
+     * @param $id [Id do locador]
+     * ------------------------------------------------------------
+     * @method GET
+     * @url locador/alterar/[ID]
+     */
+    public function alterar($id)
+    {
+        // Variaveis
+        $dados = null;
+        $usuario = null;
+        $obj = null;
+        $url = null;
+
+        // Recupera o usuário locado
+        $usuario = $this->objHelperApoio->seguranca();
+
+        // Instancia o objeto da requisição
+        $objHelperSendCurl = new SendCurl();
+
+        // Configura o header
+        $objHelperSendCurl->setHeader("Accept", "application/json");
+        $objHelperSendCurl->setHeader("Token","Bearer " . $usuario->token->token);
+
+        // Url da requisição
+        $url = BASE_URL . "api/locador/get/" . $id;
+
+        // Realiza a requisição
+        $obj = $objHelperSendCurl
+            ->resquest(
+                $url,
+                null,
+                "GET",
+                true
+            );
+
+        // Verifica se retornou o objeto
+        if(!empty($obj->objeto))
+        {
+            // Configura os dados a ser enviados para a view
+            $dados = [
+                "titulo" => "Vista Software | Alterar proprietário",
+                "usuario" => $usuario,
+                "locador" => $obj->objeto,
+
+                "js" => [
+                    "modulos" => ["Locador"]
+                ]
+            ];
+
+            // Chama a view
+            $this->view("painel/locador/alterar", $dados);
+        }
+        else
+        {
+            // Redireciona o usuario para a tela de inserção
+            $this->inserir();
+        } // Não foi encontrado
+
+    } // End >> fun::alterar()
+
+
+    /**
      * Método responsável por montar as configurações de listagem
      * de locadores para a datatable, de maneira que carregue os
      * dados de modo otimizado.
@@ -71,12 +177,11 @@ class Locador  extends Controller
     public function getDataTable()
     {
         // Variaveis
-        $data = [];
-        $usuario = null;
-        $objs = null;
-        $condicao = null;
-        $url = null;
-        $btn = null;
+        $data = []; // Armazena os dados a serem enviados no padrão correto
+        $usuario = null; // Usuario locado
+        $objs = null; // Objetos retornados da api
+        $url = null; // Url a ser requirida na api
+        $btn = null; // Configuração do botão
 
         // Seguranca
         $usuario = $this->objHelperApoio->seguranca();

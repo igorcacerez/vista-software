@@ -12,4 +12,6 @@ $Rotas->on("GET","painel","Principal::painel");
 
 // Locador
 $Rotas->on("GET","locadores","Locador::listar");
+$Rotas->on("GET","locador/inserir","Locador::inserir");
+$Rotas->on("GET","locador/alterar/{p}","Locador::alterar");
 $Rotas->on("GET","locador/get-datatable","Locador::getDataTable");
