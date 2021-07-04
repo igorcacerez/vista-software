@@ -31,7 +31,7 @@
     --white: #fff;
     --gray: #8898aa;
     --gray-dark: #32325d;
-    --light: #ced4da;
+    --light: #f6f9fc;
     --lighter: #e9ecef;
     --primary: #5e72e4;
     --secondary: #f7fafc;
@@ -8864,7 +8864,7 @@ button.bg-danger:focus
 
 .bg-light
 {
-    background-color: #adb5bd !important;
+    background-color: #eff3f7 !important;
 }
 
 a.bg-light:hover,
@@ -19541,7 +19541,7 @@ a.btn-icon-only
 
     cursor: pointer;
 
-    border: 1px solid #ced4da;
+    border: 1px solid #f6f9fc;
     border-radius: 34px !important;
     background-color: transparent;
 }
@@ -19597,7 +19597,7 @@ a.btn-icon-only
     transition: all .15s ease; 
     text-align: center;
 
-    color: #ced4da;
+    color: #f6f9fc;
 }
 @media (prefers-reduced-motion: reduce)
 {
@@ -21488,7 +21488,7 @@ textarea[resize='horizontal']
     content: '\f105';
     transition: all .15s ease; 
 
-    color: #ced4da;
+    color: #f6f9fc;
 
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -24144,7 +24144,7 @@ button.bg-gray-dark:focus
 
 .bg-light
 {
-    background-color: #ced4da !important;
+    background-color: #f6f9fc !important;
 }
 
 a.bg-light:hover,
@@ -24295,7 +24295,7 @@ button.bg-lighter:focus
 
 .bg-gradient-light
 {
-    background: linear-gradient(87deg, #ced4da 0, #cecfda 100%) !important;
+    background: linear-gradient(87deg, #f6f9fc 0, #cecfda 100%) !important;
 }
 
 .bg-gradient-lighter
@@ -24487,7 +24487,7 @@ button.section-secondary:focus
 
 .section-light
 {
-    background-color: #ced4da !important;
+    background-color: #f6f9fc !important;
 }
 
 a.section-light:hover,
@@ -25706,7 +25706,7 @@ a.text-gray-dark:focus
 
 .text-light
 {
-    color: #ced4da !important;
+    color: #f6f9fc !important;
 }
 
 a.text-light:hover,
@@ -25876,7 +25876,7 @@ a.text-lighter:focus
 .datepicker table tr td.highlighted.disabled,
 .datepicker table tr td.highlighted.disabled:active
 {
-    color: #ced4da; 
+    color: #f6f9fc;
     background: #5e72e4;
 }
 .datepicker table tr td.today

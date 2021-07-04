@@ -18,7 +18,7 @@
     <?php if(!empty($js["plugins"])): ?>
 
         <?php foreach ($js["plugins"] as $j): ?>
-            <script src='<?= BASE_URL; ?>assets/<?= $j ?>.js'></script>
+            <script src='<?= BASE_URL; ?>assets/plugins/<?= $j ?>.js'></script>
         <?php endforeach; ?>
 
     <?php endif; ?>

@@ -53,7 +53,8 @@
 </head>
 
 <style>
-    .bg-default{background-color: #d5dce2 !important;}
+    .bg-default{background-color: #f7fafc !important;}
+    .card{box-shadow: 0.1rem 0.2rem 1rem 0 rgb(136 152 170 / 34%) !important;}
 </style>
 
 <body class="bg-default">
@@ -130,7 +131,6 @@
 
     <!-- Core -->
     <script src="<?= BASE_URL; ?>assets/theme/painel/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="<?= BASE_URL; ?>assets/theme/painel/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= BASE_URL; ?>assets/theme/painel/vendor/js-cookie/js.cookie.js"></script>
     <script src="<?= BASE_URL; ?>assets/theme/painel/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?= BASE_URL; ?>assets/theme/painel/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
