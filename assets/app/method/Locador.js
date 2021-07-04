@@ -74,9 +74,6 @@ $("#formAlterarProprietario").on("submit", function () {
             // Informa que deu certo
             Global.setSuccess(data.mensagem);
 
-            // Limpa o formulário
-            Global.limparFormulario("#formAlterarProprietariosss");
-
             // Remove o bloqueio
             $(this).removeClass("bloqueiaForm");
 

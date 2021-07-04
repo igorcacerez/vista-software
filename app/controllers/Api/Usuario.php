@@ -165,7 +165,8 @@ class Usuario extends Controller
         $inicio = null; // Item inicial
         $orderBy = null; // Item pelo qual deve ordenar
         $orderTipo = null;  // Tipo da ordenação (ASC ou DESC)
-        $numPag = null; // Numero total de paginas existente para a busca
+        $numPag = 1; // Numero total de paginas existente para a busca
+        $limiteConfig = null; // Configuração do limite
 
         // Seguranca
         $usuario = $this->objHelperSeguranca->security();
@@ -189,13 +190,20 @@ class Usuario extends Controller
         }
 
 
-        // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
-        // por página, exemplo 0 à 10, 11 à 20 e assim por diante
-        $inicio = ($pag * $limite) - $limite;
+        // Verifica se possui limite informado
+        if($limite != 0)
+        {
+            // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
+            // por página, exemplo 0 à 10, 11 à 20 e assim por diante
+            $inicio = ($pag * $limite) - $limite;
+
+            // Configura o limite
+            $limiteConfig = "{$inicio},{$limite}";
+        }
 
         // Realiza a busca com páginação
         $obj = $this->objModelUsuario
-            ->get($where, $ordem, ($inicio . "," . $limite))
+            ->get($where, $ordem, $limiteConfig)
             ->fetchAll(\PDO::FETCH_OBJ);
 
         // Total de resultados encontrados sem o
@@ -205,7 +213,11 @@ class Usuario extends Controller
             ->rowCount();
 
         // Realiza o calculo das páginas
-        $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        if($limite != 0)
+        {
+            // Existe limite
+            $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        }
 
         // Monta o array de retorno
         $dados = [
@@ -252,46 +264,56 @@ class Usuario extends Controller
         // Verifica se informou os dados obrigatórios
         if(!empty($post["email"])
             && !empty($post["nome"])
-            && !empty($post["senha"]))
+            && !empty($post["senha"])
+            && !empty($post["repeteSenha"]))
         {
             // Verifica se já possui algum cadastro com o e-mail informado
             if($this->objModelUsuario->get(["email" => $post["email"]])->rowCount() == 0)
             {
-                // Monta o array de inserção no banco
-                $salva = [
-                    "nome" => $post["nome"],
-                    "email" => $post["email"],
-                    "senha" => md5($post["senha"]) // Criptografa em MD5
-                ];
-
-                // Insere no banco de dados
-                $obj = $this->objModelUsuario
-                    ->insert($salva);
-
-                // Verifica se o usuário foi inserido
-                if(!empty($obj))
+                // Verifica se as senhas combinam
+                if($post["senha"] == $post["repeteSenha"])
                 {
-                    // Busca o objeto recem adicionado no banco de dados
-                    $obj = $this->objModelUsuario
-                        ->get(["id_usuario" => $obj])
-                        ->fetch(\PDO::FETCH_OBJ);
-
-                    // Remove a senha
-                    unset($obj->senha);
-
-                    // Array de retorno
-                    $dados = [
-                        "tipo" => true, // Informa que deu certo
-                        "code" => 200, // codigo http
-                        "mensagem" => "Usuário adicionado com sucesso.", // Mensagem de exibição
-                        "objeto" => $obj // Retorna o objeto adicionado
+                    // Monta o array de inserção no banco
+                    $salva = [
+                        "nome" => $post["nome"],
+                        "email" => $post["email"],
+                        "senha" => md5($post["senha"]) // Criptografa em MD5
                     ];
+
+                    // Insere no banco de dados
+                    $obj = $this->objModelUsuario
+                        ->insert($salva);
+
+                    // Verifica se o usuário foi inserido
+                    if(!empty($obj))
+                    {
+                        // Busca o objeto recem adicionado no banco de dados
+                        $obj = $this->objModelUsuario
+                            ->get(["id_usuario" => $obj])
+                            ->fetch(\PDO::FETCH_OBJ);
+
+                        // Remove a senha
+                        unset($obj->senha);
+
+                        // Array de retorno
+                        $dados = [
+                            "tipo" => true, // Informa que deu certo
+                            "code" => 200, // codigo http
+                            "mensagem" => "Usuário adicionado com sucesso.", // Mensagem de exibição
+                            "objeto" => $obj // Retorna o objeto adicionado
+                        ];
+                    }
+                    else
+                    {
+                        // Msg
+                        $dados = ["mensagem" => "Ocorreu um erro ao inserir o usuário."];
+                    } // Error >> Ocorreu um erro ao inserir o usuário.
                 }
                 else
                 {
                     // Msg
-                    $dados = ["mensagem" => "Ocorreu um erro ao inserir o usuário."];
-                } // Error >> Ocorreu um erro ao inserir o usuário.
+                    $dados = ["mensagem" => "As senhas não combinam."];
+                } // Error >> As senhas não combinam.
             }
             else
             {
@@ -374,6 +396,18 @@ class Usuario extends Controller
 
             // Remove o repeteSenha
             unset($put["repeteSenha"]);
+
+            // Verifica se vai alterar o email
+            if(!empty($put["email"]) && $put["email"] != $obj->email)
+            {
+                // Verifica se o email está em uso
+                if($this->objModelUsuario->get(["email" => $put["email"]])->rowCount() > 0)
+                {
+                    // Informa e encerra o processo
+                    $this->api(["mensagem" => "O email informado já está em uso."]);
+                } // Error >> O email informado já está em uso.
+            }
+
 
             // Realiza a alteração
             if($this->objModelUsuario->update($put, ["id_usuario" => $id]) != false)

@@ -74,9 +74,6 @@ $("#formAlterarLocatario").on("submit", function () {
             // Informa que deu certo
             Global.setSuccess(data.mensagem);
 
-            // Limpa o formulário
-            Global.limparFormulario("#formAlterarLocatario");
-
             // Remove o bloqueio
             $(this).removeClass("bloqueiaForm");
 

@@ -237,10 +237,10 @@ class Locatario extends \DuugWork\Controller
                     "btn" => $btn
                 ];
             }
-
-            // Retorno
-            echo json_encode(["data" => $data]);
         }
+
+        // Retorno
+        echo json_encode(["data" => $data]);
 
     } // End >> fun::getDataTable()
 
