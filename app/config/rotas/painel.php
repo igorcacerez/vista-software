@@ -9,3 +9,7 @@ $Rotas->on("GET","sair","Principal::sair");
 
 // Página principal
 $Rotas->on("GET","painel","Principal::painel");
+
+// Locador
+$Rotas->on("GET","locadores","Locador::listar");
+$Rotas->on("GET","locador/get-datatable","Locador::getDataTable");

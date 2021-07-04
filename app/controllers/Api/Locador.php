@@ -94,7 +94,8 @@ class Locador extends \DuugWork\Controller
         $inicio = null; // Item inicial
         $orderBy = null; // Item pelo qual deve ordenar
         $orderTipo = null;  // Tipo da ordenação (ASC ou DESC)
-        $numPag = null; // Numero total de paginas existente para a busca
+        $numPag = 1; // Numero total de paginas existente para a busca
+        $limiteConfig = null; // Configuração do limite
 
         // Seguranca
         $usuario = $this->objHelperSeguranca->security();
@@ -118,13 +119,20 @@ class Locador extends \DuugWork\Controller
         }
 
 
-        // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
-        // por página, exemplo 0 à 10, 11 à 20 e assim por diante
-        $inicio = ($pag * $limite) - $limite;
+        // Verifica se possui limite informado
+        if($limite != 0)
+        {
+            // Atribui a variável inicio, o inicio de onde os registros vão ser mostrados
+            // por página, exemplo 0 à 10, 11 à 20 e assim por diante
+            $inicio = ($pag * $limite) - $limite;
+
+            // Configura o limite
+            $limiteConfig = "{$inicio},{$limite}";
+        }
 
         // Realiza a busca com páginação
         $obj = $this->objModelLocador
-            ->get($where, $ordem, ($inicio . "," . $limite))
+            ->get($where, $ordem, $limiteConfig)
             ->fetchAll(\PDO::FETCH_OBJ);
 
         // Total de resultados encontrados sem o
@@ -134,7 +142,11 @@ class Locador extends \DuugWork\Controller
             ->rowCount();
 
         // Realiza o calculo das páginas
-        $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        if($limite != 0)
+        {
+            // Existe limite
+            $numPag = ($total > 0) ? ceil($total / $limite) : 1;
+        }
 
         // Monta o array de retorno
         $dados = [
@@ -354,7 +366,7 @@ class Locador extends \DuugWork\Controller
             else
             {
                 // Msg
-                $dados = ["mensagem" => "Impossível deletar. O locador possui contatos vinculados."];
+                $dados = ["mensagem" => "Impossível deletar. O locador possui contratos vinculados."];
             } // Error >> Impossível deletar. O locador possui contatos vinculados.
         }
         else

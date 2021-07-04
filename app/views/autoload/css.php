@@ -15,7 +15,7 @@
 <?php if(!empty($css)): ?>
 
     <?php foreach ($css as $c): ?>
-        <link rel="stylesheet" href="<?= BASE_URL; ?>assets/<?= $c ?>.css" />
+        <link rel="stylesheet" href="<?= BASE_URL; ?>assets/plugins/<?= $c ?>.css" />
     <?php endforeach; ?>
 
 <?php endif; ?>
