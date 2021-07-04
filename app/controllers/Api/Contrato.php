@@ -564,7 +564,7 @@ class Contrato extends \DuugWork\Controller
             if($i > 0)
             {
                 // Realiza a soma para o vencimento
-                $dataMensalidade = date("Y-m-d", strtotime("+{$i} month", strtotime($dataMensalidade)));
+                $dataMensalidade = date("Y-m-d", strtotime("+1 month", strtotime($dataMensalidade)));
 
                 // Adiciona o valor
                 // Força os valores terem no maximo 2 digitos após a virgula
@@ -575,7 +575,7 @@ class Contrato extends \DuugWork\Controller
 
             // Adiciona ao array de inserção as datas de vencimento e repasse
             $salva["dataVencimento"] = $dataMensalidade;
-            $salva["dataRepasse"] = date("Y-m-d", strtotime("+{$locador->diasRepasse} days"));
+            $salva["dataRepasse"] = date("Y-m-d", strtotime("+{$locador->diasRepasse} days", strtotime($dataMensalidade)));
 
             // Insere no banco de dados
             $obj = $this->objModelMensalidadeRespasse

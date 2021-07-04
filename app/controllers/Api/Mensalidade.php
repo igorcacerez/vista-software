@@ -56,11 +56,11 @@ class Mensalidade extends Controller
     {
         // Variaveis
         $dados = null; // Retorno para a view
-        $obj = null; // Contrato Encontrado
+        $obj = null; // Contrato Encontradoss
 
         // Realiza a busca do contrato
-        $obj = $this->objModelContrato
-            ->get(["id_contrato" => $id])
+        $obj = $this->objModelMensalidadeRepasse
+            ->get(["id_mensalidaderepasse" => $id])
             ->fetch(\PDO::FETCH_OBJ);
 
         // Verifica se encontrou
@@ -68,7 +68,7 @@ class Mensalidade extends Controller
         {
             // Busca o contrato
             $obj->contrato = $this->objModelContrato
-                ->get(["id_contrato" => $obj->contrato])
+                ->get(["id_contrato" => $obj->id_contrato])
                 ->fetch(\PDO::FETCH_OBJ);
 
             // Busca o locador
@@ -148,13 +148,13 @@ class Mensalidade extends Controller
         }
 
         // Realiza a busca com páginação
-        $obj = $this->objModelContrato
+        $obj = $this->objModelMensalidadeRepasse
             ->get($where, $ordem, $limiteConfig)
             ->fetchAll(\PDO::FETCH_OBJ);
 
         // Total de resultados encontrados sem o
         // limite
-        $total = $this->objModelContrato
+        $total = $this->objModelMensalidadeRepasse
             ->get($where)
             ->rowCount();
 
@@ -162,16 +162,21 @@ class Mensalidade extends Controller
         if($total > 0)
         {
             // Percorre os objetos
-            foreach ($obj as $contrato)
+            foreach ($obj as $mensalidade)
             {
+                // Busca o contrato
+                $mensalidade->contrato = $this->objModelContrato
+                    ->get(["id_contrato" => $mensalidade->id_contrato])
+                    ->fetch(\PDO::FETCH_OBJ);
+
                 // Busca o locador
-                $contrato->locador = $this->objModelLocador
-                    ->get(["id_locador" => $contrato->id_locador])
+                $mensalidade->contrato->locador = $this->objModelLocador
+                    ->get(["id_locador" => $mensalidade->contrato->id_locador])
                     ->fetch(\PDO::FETCH_OBJ);
 
                 // Busca o locatário
-                $contrato->locatario = $this->objModelLocatario
-                    ->get(["id_locatario" => $contrato->id_locatario])
+                $mensalidade->contrato->locatario = $this->objModelLocatario
+                    ->get(["id_locatario" => $mensalidade->contrato->id_locatario])
                     ->fetch(\PDO::FETCH_OBJ);
             }
         }
