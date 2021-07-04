@@ -4,19 +4,17 @@
 namespace Controller;
 
 // Importações
-use DuugWork\Controller;
 use DuugWork\Helper\SendCurl;
 use Helper\Apoio;
 
-
 /**
  * Classe responsável por conter os métodos responsáveis
- * por configurar as páginas relativas ao locador
+ * por configurar as páginas relativas ao locatario
  *
- * Class Locador
+ * Class Locatario
  * @package Controller
  */
-class Locador  extends Controller
+class Locatario extends \DuugWork\Controller
 {
     // Objetos
     private $objHelperApoio;
@@ -35,10 +33,10 @@ class Locador  extends Controller
 
     /**
      * Método responsável por configurar a página que irá
-     * listar todos os locadores.
+     * listar todos os locatarios.
      * ------------------------------------------------------------
      * @method GET
-     * @url locadores
+     * @url locatarios
      */
     public function listar()
     {
@@ -51,7 +49,7 @@ class Locador  extends Controller
 
         // Dados a serem enviados para a view
         $dados = [
-            "titulo" => "Vista Software | Todos os proprietários",
+            "titulo" => "Vista Software | Todos os locatários",
             "usuario" => $usuario,
 
             // CSS
@@ -61,7 +59,7 @@ class Locador  extends Controller
 
             // JS
             "js" => [
-                "modulos" => ["Locador"],
+                "modulos" => ["Locatario"],
                 "plugins" => [
                     "datatables/js/js"
                 ]
@@ -69,7 +67,7 @@ class Locador  extends Controller
         ];
 
         // Chama a view
-        $this->view("painel/locador/listar", $dados);
+        $this->view("painel/locatario/listar", $dados);
 
     } // End >> fun::listar()
 
@@ -77,10 +75,10 @@ class Locador  extends Controller
     /**
      * Método responsável por configurar a página que
      * possui o formulário de cadatro para um novo
-     * locador no sistema.
+     * locatario no sistema.
      * ------------------------------------------------------------
      * @method GET
-     * @url locador/inserir
+     * @url locatario/inserir
      */
     public function inserir()
     {
@@ -93,29 +91,29 @@ class Locador  extends Controller
 
         // Dados a serem enviados para a view
         $dados = [
-            "titulo" => "Vista Software | Adicionar Proprietário",
+            "titulo" => "Vista Software | Adicionar Locatário",
             "usuario" => $usuario,
 
             // Js
             "js" => [
-                "modulos" => ["Locador"]
+                "modulos" => ["Locatario"]
             ]
         ];
 
         // Chama a view
-        $this->view("painel/locador/inserir", $dados);
+        $this->view("painel/locatario/inserir", $dados);
 
     } // End >> fun::inserir()
 
 
     /**
-     * Método responsável por busca o locador pelo id informado
+     * Método responsável por busca o locatario pelo id informado
      * e configurar a página de alteração do mesmo.
      * ------------------------------------------------------------
-     * @param $id [Id do locador]
+     * @param $id [Id do locatario]
      * ------------------------------------------------------------
      * @method GET
-     * @url locador/alterar/[ID]
+     * @url locatario/alterar/[ID]
      */
     public function alterar($id)
     {
@@ -136,7 +134,7 @@ class Locador  extends Controller
         $objHelperSendCurl->setHeader("Token","Bearer " . $usuario->token->token);
 
         // Url da requisição
-        $url = BASE_URL . "api/locador/get/" . $id;
+        $url = BASE_URL . "api/locatario/get/" . $id;
 
         // Realiza a requisição
         $obj = $objHelperSendCurl
@@ -152,17 +150,17 @@ class Locador  extends Controller
         {
             // Configura os dados a ser enviados para a view
             $dados = [
-                "titulo" => "Vista Software | Alterar proprietário",
+                "titulo" => "Vista Software | Alterar Locatário",
                 "usuario" => $usuario,
-                "locador" => $obj->objeto,
+                "locatario" => $obj->objeto,
 
                 "js" => [
-                    "modulos" => ["Locador"]
+                    "modulos" => ["Locatario"]
                 ]
             ];
 
             // Chama a view
-            $this->view("painel/locador/alterar", $dados);
+            $this->view("painel/locatario/alterar", $dados);
         }
         else
         {
@@ -175,17 +173,17 @@ class Locador  extends Controller
 
     /**
      * Método responsável por montar as configurações de listagem
-     * de locadores para a datatable, de maneira que carregue os
+     * de locatarios para a datatable, de maneira que carregue os
      * dados de modo otimizado.
      * ------------------------------------------------------------
      * @method GET
-     * @url locador/get-datatable
+     * @url locatario/get-datatable
      */
     public function getDataTable()
     {
         // Variaveis
         $data = []; // Armazena os dados a serem enviados no padrão correto
-        $usuario = null; // Usuario locado
+        $usuario = null; // Usuario logado
         $objs = null; // Objetos retornados da api
         $url = null; // Url a ser requirida na api
         $btn = null; // Configuração do botão
@@ -202,7 +200,7 @@ class Locador  extends Controller
 
         // Url da requisição
         // Com limite 0 para retornar todos os reguistros
-        $url = BASE_URL . "api/locador/get?limit=0";
+        $url = BASE_URL . "api/locatario/get?limit=0";
 
         // Realiza a requisição
         $objs = $objHelperSendCurl
@@ -225,17 +223,17 @@ class Locador  extends Controller
                                 <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
-                                <a class="dropdown-item" href="'. BASE_URL .'locador/alterar/'. $item->id_locador .'">Alterar</a>
-                                <a class="dropdown-item deletarProprietario" data-id="'. $item->id_locador .'" href="#">Deletar</a>
+                                <a class="dropdown-item" href="'. BASE_URL .'locatario/alterar/'. $item->id_locatario .'">Alterar</a>
+                                <a class="dropdown-item deletarLocatario" data-id="'. $item->id_locatario .'" href="#">Deletar</a>
                             </div>
                         </div>';
 
                 // Cria o array
                 $data[] = [
-                    "DT_RowId" => "tb_" . $item->id_locador,
+                    "DT_RowId" => "tb_" . $item->id_locatario,
                     "nome" => $item->nome,
                     "email" => $item->email,
-                    "diasRepasse" => $item->diasRepasse,
+                    "telefone" => $this->objHelperApoio->formatTelCel($item->telefone),
                     "btn" => $btn
                 ];
             }
@@ -246,4 +244,4 @@ class Locador  extends Controller
 
     } // End >> fun::getDataTable()
 
-} // End >> CLass::Locador
+} // End >> Class::Locatario

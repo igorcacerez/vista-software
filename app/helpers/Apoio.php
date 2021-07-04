@@ -103,4 +103,37 @@ class Apoio
         return $dias;
     } // End >> diasDatas()
 
+
+    /**
+     * Método responsável por formatar um determinado numero de
+     * telefone ou celular, adionando mascara.
+     * --------------------------------------------------------
+     * @param $value
+     * @return string|string[]|null
+     * --------------------------------------------------------
+     * @author igorcacerez
+     */
+    public function formatTelCel($value)
+    {
+        // Limpa os dados
+        $value = preg_replace("/\D/", '', $value);
+
+        // Verifica se possui algo
+        if(!empty($value))
+        {
+            // Verifica se é fixo
+            if (strlen($value) === 10)
+            {
+                return preg_replace("/(\d{2})(\d{4})(\d{4})/", "(\$1) \$2-\$3", $value);
+            }
+
+            return preg_replace("/(\d{2})(\d{5})(\d{4})/", "(\$1) \$2-\$3", $value);
+        }
+        else
+        {
+            return null;
+        }
+
+    } // End >> fun::formatTelCel()
+
 } // End >> Class::Apoio()

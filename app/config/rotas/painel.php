@@ -15,3 +15,9 @@ $Rotas->on("GET","locadores","Locador::listar");
 $Rotas->on("GET","locador/inserir","Locador::inserir");
 $Rotas->on("GET","locador/alterar/{p}","Locador::alterar");
 $Rotas->on("GET","locador/get-datatable","Locador::getDataTable");
+
+// Locatário
+$Rotas->on("GET","locatarios","Locatario::listar");
+$Rotas->on("GET","locatario/inserir","Locatario::inserir");
+$Rotas->on("GET","locatario/alterar/{p}","Locatario::alterar");
+$Rotas->on("GET","locatario/get-datatable","Locatario::getDataTable");

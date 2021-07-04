@@ -3,9 +3,9 @@ import Global from "../global.js"
 
 /**
  * Método responsável por enviar a requisição de
- * inserção de locador para a api.
+ * inserção de locatario para a api.
  */
-$("#formAdicionarProprietario").on("submit", function () {
+$("#formAdicionarLocatario").on("submit", function () {
 
     // Não atualiza a página
     event.preventDefault();
@@ -17,7 +17,7 @@ $("#formAdicionarProprietario").on("submit", function () {
     $(this).addClass("bloqueiaForm");
 
     // Recupera as informações para requisição
-    var url = Global.config.urlApi + "locador/insert";
+    var url = Global.config.urlApi + "locatario/insert";
     var token = Global.session.get("token").token;
 
     // Realiza a requisição
@@ -28,7 +28,7 @@ $("#formAdicionarProprietario").on("submit", function () {
             Global.setSuccess(data.mensagem);
 
             // Limpa o formulário
-            Global.limparFormulario("#formAdicionarProprietario");
+            Global.limparFormulario("#formAdicionarLocatario");
 
             // Remove o bloqueio
             $(this).removeClass("bloqueiaForm");
@@ -49,7 +49,7 @@ $("#formAdicionarProprietario").on("submit", function () {
  * Método responsável por enviar a requisição de
  * alteração para a api.
  */
-$("#formAlterarProprietario").on("submit", function () {
+$("#formAlterarLocatario").on("submit", function () {
 
     // Não atualiza a página
     event.preventDefault();
@@ -64,7 +64,7 @@ $("#formAlterarProprietario").on("submit", function () {
     var id = $(this).data("id");
 
     // Recupera as informações para requisição
-    var url = Global.config.urlApi + "locador/update/" + id;
+    var url = Global.config.urlApi + "locatario/update/" + id;
     var token = Global.session.get("token").token;
 
     // Realiza a requisição
@@ -75,7 +75,7 @@ $("#formAlterarProprietario").on("submit", function () {
             Global.setSuccess(data.mensagem);
 
             // Limpa o formulário
-            Global.limparFormulario("#formAlterarProprietariosss");
+            Global.limparFormulario("#formAlterarLocatario");
 
             // Remove o bloqueio
             $(this).removeClass("bloqueiaForm");
@@ -100,10 +100,10 @@ $("#formAlterarProprietario").on("submit", function () {
 $(document).ready(function() {
 
     // Verifica se existe a div para evitar erros
-    if($('.getDatatableProprietarios').length)
+    if($('.getDatatableLocatario').length)
     {
         // getDatatableUsuarios
-        var tabelaProprietarios = $('.getDatatableProprietarios').DataTable({
+        var tabelaProprietarios = $('.getDatatableLocatario').DataTable({
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: [
@@ -112,12 +112,12 @@ $(document).ready(function() {
                 'csvHtml5',
                 'pdfHtml5'
             ],
-            ajax: Global.config.url + "locador/get-datatable",
+            ajax: Global.config.url + "locatario/get-datatable",
             pageLength: 40,
             columns:[
                 {"data": "nome"},
                 {"data": "email"},
-                {"data": "diasRepasse"},
+                {"data": "telefone"},
                 {"data": "btn"}
             ],
             deferRender: true,
@@ -127,7 +127,7 @@ $(document).ready(function() {
                  * Método responsável por deletar uma determinado
                  * locador. Enviando a solicitação para a API
                  */
-                $(".deletarProprietario").on("click", function () {
+                $(".deletarLocatario").on("click", function () {
 
                     // Não atualiza a página
                     event.preventDefault();
@@ -136,13 +136,13 @@ $(document).ready(function() {
                     var id = $(this).data("id");
 
                     // Url e Token
-                    var url = Global.config.urlApi + "locador/delete/" + id;
+                    var url = Global.config.urlApi + "locatario/delete/" + id;
                     var token = Global.session.get("token");
 
                     // Pergunta se realmente quer deletar
                     Swal.fire({
-                        title: 'Deletar Proprietário',
-                        text: 'Deseja realmente deletar esse proprietário?',
+                        title: 'Deletar Locatário',
+                        text: 'Deseja realmente deletar esse locatário?',
                         type: 'warning',
                         showCancelButton: true,
                         cancelButtonText: 'Cancelar',
@@ -160,7 +160,7 @@ $(document).ready(function() {
                                     Global.setSuccess(data.mensagem);
 
                                     // Remove da tabela
-                                    $('.getDatatableProprietarios')
+                                    $('.getDatatableLocatario')
                                         .DataTable()
                                         .row("#tb_" + id)
                                         .remove()
@@ -173,7 +173,6 @@ $(document).ready(function() {
                     // Não atualiza mesmo
                     return false;
                 });
-
             }
         });
     }

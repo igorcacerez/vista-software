@@ -18,6 +18,15 @@ $(".maskPeso").mask("#.00", {reverse: true});
 $(".maskNumero").mask("#", {reverse: true});
 $(".maskCartao").mask("# ###0", {reverse: true});
 
+var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+    spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+        }
+    };
+$('.maskTelCel').mask(SPMaskBehavior, spOptions);
 
 /**
  * Método responsável por realizar uma requisição,
