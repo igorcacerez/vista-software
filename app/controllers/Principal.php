@@ -109,13 +109,63 @@ class Principal extends CI_controller
     } // End >> fun::sair()
 
 
+    /**
+     * Método responsável por configurar a página inicial do site.
+     * Busca as informações necessárias e priorizando o SEO
+     * ------------------------------------------------------------------
+     * @url /
+     * @method GET
+     */
     public function index()
     {
+        // Variaveis
+        $dados = null; // Dados as serem exibidos na view
+        $seo = null; // Dados de seo
+
+        // Recupera as configurações de seo
+        $seo = $this->getSEO(
+            [
+                "title" => SITE_NOME . " | A sua imobiliária",
+                "description" => "Encontre imóveis na zona sul de porto alegre",
+                "keywords" => SITE_NOME . ", imoveis, porto alegre, aluguel, comprar"
+            ],
+            [
+                "title" => SITE_NOME . " | A sua imobiliária",
+                "description" => "Encontre imóveis na zona sul de porto alegre"
+            ]
+        );
+
+        // Configurações para a view
+        $dados = [
+            "seo" => $seo["seo"],
+            "smo" => $seo["smo"],
+
+            // Css
+            "css" => [
+                "selectize/dist/css/selectize"
+            ],
+
+            // Js
+            "js" => [
+                "modulos" => ["Site"],
+                "plugins" => ["selectize/dist/js/standalone/selectize"],
+                "pages" => ["selectize"]
+            ]
+        ];
+
+        // Chama a view
+        $this->view("site/index", $dados);
 
     } // End >> fun::index()
 
 
-
+    /**
+     * Método responsável por configurar a página inicial do painel
+     * administrativo. Buscando todas as informações necessárias.
+     * ------------------------------------------------------------------
+     * @url painel
+     * @method GET
+     */
     public function painel()
     {
         // Variaveis
@@ -271,5 +321,48 @@ class Principal extends CI_controller
         $this->view("painel/dashboard", $dados);
 
     } // End >> fun::painel()
+
+
+    /**
+     * Método responsável por exibir a página de erro 404
+     * ------------------------------------------------------------------
+     * @url [erro 404]
+     * @method GET
+     */
+    public function erro404()
+    {
+        // Variaveis
+        $dados = null; // Dados as serem exibidos na view
+        $seo = null; // Dados de seo
+
+        // Recupera as configurações de seo
+        $seo = $this->getSEO(
+            [
+                "title" => SITE_NOME . " | Página não encontrada",
+                "description" => "Encontre imóveis na zona sul de porto alegre",
+                "keywords" => SITE_NOME . ", imoveis, porto alegre, aluguel, comprar"
+            ],
+            [
+                "title" => SITE_NOME . " | Página não encontrada",
+                "description" => "Encontre imóveis na zona sul de porto alegre",
+                "url" => substr(BASE_URL,0,-1) . $_SERVER["REQUEST_URI"],
+            ]
+        );
+
+        // Configurações para a view
+        $dados = [
+            "seo" => $seo["seo"],
+            "smo" => $seo["smo"],
+
+            // Js
+            "js" => [
+                "modulos" => ["Site"]
+            ]
+        ];
+
+        // Chama a view
+        $this->view("site/404", $dados);
+
+    } // End >> fun::erro404()
 
 } // END::Class Principal
