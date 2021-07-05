@@ -247,13 +247,17 @@ class Contrato extends \DuugWork\Controller
         // Recupera os dados post
         $post = $_POST;
 
+        // Limpa o id do imovel
+        $post["imovel"] = (!empty($post["imovel"]) ? preg_replace('/[^0-9]/', '', $post["imovel"]) : null);
+
         // Verifica se informou os dados obrigatórios
         if(!empty($post["imovel"])
             && !empty($post["id_locatario"])
             && !empty($post["id_locador"])
             && !empty($post["taxaAdministracao"])
             && !empty($post["dataInicio"])
-            && !empty($post["dataFim"]))
+            && !empty($post["dataFim"])
+            && !empty($post["valorAluguel"]))
         {
             // Verifica se a data de inicio é maior que a data atual
             if($post["dataInicio"] >= date("Y-m-d"))
@@ -273,8 +277,7 @@ class Contrato extends \DuugWork\Controller
                             // Informações a ser retornadas pelo
                             $informacoesBuscaApi = [
                                 "fields" => [
-                                    "Codigo", "ValorLocacao", "ValorIptu", "ValorCondominio",
-                                    "Bairro", "Cidade", "Endereco", "Numero", "CEP", "UF"
+                                    "Codigo", "Bairro", "Cidade", "Endereco", "Numero", "CEP", "UF"
                                 ]
                             ];
 
@@ -292,70 +295,116 @@ class Contrato extends \DuugWork\Controller
                             // Verifica se a requisição deu certo e retornou os dados do imovel
                             if(empty($imovel->status) && !empty($imovel->Codigo))
                             {
-                                // Configura a taxa de administracao para o padrão americano de pontuação
-                                $post["taxaAdministracao"] = str_replace(".","",$post["taxaAdministracao"]);
-                                $post["taxaAdministracao"] = str_replace(",",".",$post["taxaAdministracao"]);
+                                // Verifica se já possui um contrato com o imovel
+                                $aux = $this->objModelContrato
+                                    ->get(["dataFim >" => $post["dataInicio"], "imovel" => $post["imovel"]])
+                                    ->rowCount();
 
-                                // Configura o array de inserção no banco de dados
-                                $salva = [
-                                    "id_locatario" => $post["id_locatario"],
-                                    "id_locador" => $post["id_locador"],
-                                    "imovel" => $post["imovel"],
-                                    "taxaAdministracao" => $post["taxaAdministracao"],
-                                    "cep" => preg_replace('/[^0-9]/', '', $imovel->CEP),
-                                    "cidade" => $imovel->Cidade,
-                                    "estado" => $imovel->UF,
-                                    "Endereco" => $imovel->Endereco,
-                                    "Numero" => $imovel->Numero,
-                                    "dataInicio" => $post["dataInicio"],
-                                    "dataFim" => $post["dataFim"]
-                                ];
-
-                                // Adiona os valores, os que não forem informados deixa como zero
-                                $salva["valorAluguel"] = (!empty($imovel->ValorLocacao) ? $imovel->ValorLocacao : 0);
-                                $salva["valorIptu"] = (!empty($imovel->ValorIptu) ? $imovel->ValorIptu : 0);
-                                $salva["valorCondominio"] = (!empty($imovel->ValorCondominio) ? $imovel->ValorCondominio : 0);
-
-                                // Insere o contrato no banco de dados
-                                $obj = $this->objModelContrato
-                                    ->insert($salva);
-
-                                // Verifica se inseriu corretamente
-                                if(!empty($obj))
+                                // Faz a verificação se encontrou algo
+                                if($aux == 0)
                                 {
-                                    // Busca o objeto recem inserido no banco de dados
-                                    $obj = $this->objModelContrato
-                                        ->get(["id_contrato" => $obj])
-                                        ->fetch(\PDO::FETCH_OBJ);
+                                    // Configura a taxa de administracao para o padrão americano de pontuação
+                                    $post["taxaAdministracao"] = str_replace(".","",$post["taxaAdministracao"]);
+                                    $post["taxaAdministracao"] = str_replace(",",".",$post["taxaAdministracao"]);
 
-                                    try
+                                    // Configura o valor do aluguel de administracao para o padrão americano de pontuação
+                                    $post["valorAluguel"] = str_replace(".","",$post["valorAluguel"]);
+                                    $post["valorAluguel"] = str_replace(",",".",$post["valorAluguel"]);
+
+                                    // Verifica se possui iptu
+                                    if(!empty($post["valorIptu"]))
                                     {
-                                        // Gera as mensalidade
-                                        $this->gerarMensalidades($obj);
-
-                                        // Array de retorno
-                                        $dados = [
-                                            "tipo" => true, // Informa que deu certo
-                                            "code" => 200, // codigo http
-                                            "mensagem" => "Contrato adicionado com sucesso.", // Mensagem de exibição
-                                            "objeto" => $obj // Retorna o objeto adicionado
-                                        ];
+                                        // Configura para o padrão americano de pontuação
+                                        $post["valorIptu"] = str_replace(".","",$post["valorIptu"]);
+                                        $post["valorIptu"] = str_replace(",",".",$post["valorIptu"]);
                                     }
-                                    catch (\Exception $e)
+                                    else
                                     {
-                                        // Deleta o contrato adicionado
-                                        $this->objModelContrato
-                                            ->delete(["id_contrato" => $obj->id_contrato]);
+                                        // Força ser 0
+                                        $post["valorIptu"] = 0;
+                                    }
 
-                                        // Informa do erro ocorrido
-                                        $dados = ["mensagem" => $e->getMessage()];
-                                    } // Error >> Ocorreu algum erro ao gerar as mensalidades.
+                                    // Verifica se possui condomino
+                                    if(!empty($post["valorCondominio"]))
+                                    {
+                                        // Configura para o padrão americano de pontuação
+                                        $post["valorCondominio"] = str_replace(".","",$post["valorIptu"]);
+                                        $post["valorCondominio"] = str_replace(",",".",$post["valorIptu"]);
+                                    }
+                                    else
+                                    {
+                                        // Força ser 0
+                                        $post["valorCondominio"] = 0;
+                                    }
+
+                                    // Configura a taxa de administracao para o padrão americano de pontuação
+                                    $post["taxaAdministracao"] = str_replace(".","",$post["taxaAdministracao"]);
+                                    $post["taxaAdministracao"] = str_replace(",",".",$post["taxaAdministracao"]);
+
+                                    // Configura o array de inserção no banco de dados
+                                    $salva = [
+                                        "id_locatario" => $post["id_locatario"],
+                                        "id_locador" => $post["id_locador"],
+                                        "imovel" => $post["imovel"],
+                                        "taxaAdministracao" => $post["taxaAdministracao"],
+                                        "cep" => preg_replace('/[^0-9]/', '', $imovel->CEP),
+                                        "cidade" => $imovel->Cidade,
+                                        "estado" => $imovel->UF,
+                                        "Endereco" => $imovel->Endereco,
+                                        "Numero" => $imovel->Numero,
+                                        "dataInicio" => $post["dataInicio"],
+                                        "dataFim" => $post["dataFim"],
+                                        "valorAluguel" => $post["valorAluguel"],
+                                        "valorCondominio" => $post["valorCondominio"],
+                                        "valorIptu" => $post["valorIptu"],
+                                    ];
+
+                                    // Insere o contrato no banco de dados
+                                    $obj = $this->objModelContrato
+                                        ->insert($salva);
+
+                                    // Verifica se inseriu corretamente
+                                    if(!empty($obj))
+                                    {
+                                        // Busca o objeto recem inserido no banco de dados
+                                        $obj = $this->objModelContrato
+                                            ->get(["id_contrato" => $obj])
+                                            ->fetch(\PDO::FETCH_OBJ);
+
+                                        try
+                                        {
+                                            // Gera as mensalidade
+                                            $this->gerarMensalidades($obj);
+
+                                            // Array de retorno
+                                            $dados = [
+                                                "tipo" => true, // Informa que deu certo
+                                                "code" => 200, // codigo http
+                                                "mensagem" => "Contrato adicionado com sucesso.", // Mensagem de exibição
+                                                "objeto" => $obj // Retorna o objeto adicionado
+                                            ];
+                                        }
+                                        catch (\Exception $e)
+                                        {
+                                            // Deleta o contrato adicionado
+                                            $this->objModelContrato
+                                                ->delete(["id_contrato" => $obj->id_contrato]);
+
+                                            // Informa do erro ocorrido
+                                            $dados = ["mensagem" => $e->getMessage()];
+                                        } // Error >> Ocorreu algum erro ao gerar as mensalidades.
+                                    }
+                                    else
+                                    {
+                                        // Msg
+                                        $dados = ["mensagem" => "Ocorreu um erro ao inserir o contrato."];
+                                    } // Error >> Ocorreu um erro ao inserir o contrato.
                                 }
                                 else
                                 {
                                     // Msg
-                                    $dados = ["mensagem" => "Ocorreu um erro ao inserir o contrato."];
-                                } // Error >> Ocorreu um erro ao inserir o contrato.
+                                    $dados = ["mensagem" => "O imovel já possui um contrato no período informado."];
+                                } // Error >> O imovel já possui um contrato no período informado.
                             }
                             else
                             {

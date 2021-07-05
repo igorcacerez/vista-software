@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#55b5a6">
     <meta name="apple-mobile-web-app-status-bar-style" content="#55b5a6">
-    <meta name="msapplication-navbutton-color" content="#55b5a6"
+    <meta name="msapplication-navbutton-color" content="#55b5a6">
 
     <!-- Favicon -->
     <link rel=icon href=https://www.vistasoft.com.br/wp-content/uploads/2020/12/logo-vista.png sizes=32x32>

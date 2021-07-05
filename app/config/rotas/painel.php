@@ -27,3 +27,9 @@ $Rotas->on("GET","usuarios","Usuario::listar");
 $Rotas->on("GET","usuario/inserir","Usuario::inserir");
 $Rotas->on("GET","usuario/alterar/{p}","Usuario::alterar");
 $Rotas->on("GET","usuario/get-datatable","Usuario::getDataTable");
+
+// Contrato
+$Rotas->on("GET","contratos","Contrato::listar");
+$Rotas->on("GET","contrato/inserir","Contrato::inserir");
+$Rotas->on("GET","contrato/detalhes/{p}","Contrato::detalhes");
+$Rotas->on("GET","contrato/get-datatable","Contrato::getDataTable");
