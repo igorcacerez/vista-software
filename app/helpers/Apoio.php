@@ -9,6 +9,8 @@
 namespace Helper;
 
 // Inicia a classe
+use DuugWork\Helper\SendCurl;
+
 class Apoio
 {
     /**
@@ -135,5 +137,129 @@ class Apoio
         }
 
     } // End >> fun::formatTelCel()
+
+
+    /**
+     * Método responsável por realizar a busca de bairros na api do
+     * vista crm e salvar os resultados em uma session para que na
+     * proxima necessidade não precise realziar uma consulta na api.
+     * --------------------------------------------------------------
+     * @return array|mixed
+     */
+    public function retornaBairros()
+    {
+        // Variaveis
+        $bairros = null;
+        $informacoesBuscaApi = null;
+        $url = null;
+
+        // Verifica se não possui uma busca salva
+        if(empty($_SESSION["bairros"]))
+        {
+            // Instancia o objeto de requisição
+            $objHelperSend = new SendCurl();
+
+            // Informações a ser retornadas pelo
+            $informacoesBuscaApi = [
+                "fields" => [
+                    "Bairro"
+                ],
+
+                // Filtra para não exibir vazio nem ...
+                "advFilter" => [
+                    "Bairro" => ["!=", ""],
+                    "And" => [
+                        "Bairro" => ["!=","..."]
+                    ]
+                ]
+            ];
+
+            // Configura a url
+            $url = URL_API . "imoveis/listarConteudo?key=" . TOKEN_VISTA;
+            $url .= "&pesquisa=" . json_encode($informacoesBuscaApi);
+
+            // Configura o cabeçalho da requisição
+            $objHelperSend->setHeader("Accept", "application/json"); // Aceita resposta em Json
+
+            // Realiza a requisição na Api do Vista CRM
+            $bairros = $objHelperSend->resquest($url, null, "GET", true);
+
+            // Evita erros e recupera o conteudo
+            if(!empty($bairros->Bairro))
+            {
+                // Recupera apenas os itens
+                $bairros = $bairros->Bairro;
+
+                // Salva na session
+                $_SESSION["bairros"] = $bairros;
+            }
+        }
+        else
+        {
+            // Recupera os itens da session
+            $bairros = $_SESSION["bairros"];
+        } // Possui salvo na session
+
+        // Retorna os bairros salvos
+        return $bairros;
+
+    } // End >> fun::retornaBairros()
+
+
+    public function retornaCategorias()
+    {
+        // Variaveis
+        $categorias = null;
+        $informacoesBuscaApi = null;
+        $url = null;
+
+        // Verifica se não possui uma busca salva
+        if(empty($_SESSION["categorias"]))
+        {
+            // Instancia o objeto de requisição
+            $objHelperSend = new SendCurl();
+
+            // Informações a ser retornadas pelo
+            $informacoesBuscaApi = [
+                "fields" => [
+                    "Categoria"
+                ],
+
+                // Não retorna se tiver vazio
+                "filter" => [
+                    "Categoria" => ["!=", ""]
+                ]
+            ];
+
+            // Configura a url
+            $url = URL_API . "imoveis/listarConteudo?key=" . TOKEN_VISTA;
+            $url .= "&pesquisa=" . json_encode($informacoesBuscaApi);
+
+            // Configura o cabeçalho da requisição
+            $objHelperSend->setHeader("Accept", "application/json"); // Aceita resposta em Json
+
+            // Realiza a requisição na Api do Vista CRM
+            $categorias = $objHelperSend->resquest($url, null, "GET", true);
+
+            // Evita erros e recupera o conteudo
+            if(!empty($categorias->Categoria))
+            {
+                // Recupera apenas os itens
+                $categorias = $categorias->Categoria;
+
+                // Salva na session
+                $_SESSION["categorias"] = $categorias;
+            }
+        }
+        else
+        {
+            // Recupera os dados da session
+            $categorias = $_SESSION["categorias"];
+        } // Já possui a busca salva na session
+
+        // Retorna
+        return $categorias;
+
+    } // End >> fun::retornaCategorias()
 
 } // End >> Class::Apoio()

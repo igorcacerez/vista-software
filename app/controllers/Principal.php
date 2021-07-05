@@ -121,6 +121,14 @@ class Principal extends CI_controller
         // Variaveis
         $dados = null; // Dados as serem exibidos na view
         $seo = null; // Dados de seo
+        $bairros = null; // Bairros retornados da api vista
+        $categorias = null; // Categorias retornadas da api vista
+
+        // Busca os bairros
+        $bairros = $this->objHelperApoio->retornaBairros();
+
+        // Busca as categorias
+        $categorias = $this->objHelperApoio->retornaCategorias();
 
         // Recupera as configurações de seo
         $seo = $this->getSEO(
@@ -139,6 +147,9 @@ class Principal extends CI_controller
         $dados = [
             "seo" => $seo["seo"],
             "smo" => $seo["smo"],
+
+            "bairros" => $bairros,
+            "categorias" => $categorias,
 
             // Css
             "css" => [

@@ -1,0 +1,40 @@
+html, body
+{
+    font-family: 'Roboto', sans-serif;
+}
+
+a{text-decoration: none;}
+
+/**
+* HEADER ===================================================
+* ========================================================== **/
+
+header
+{
+    background: #3c3a3b;
+    padding: 15px 0px;
+}
+
+header .btnMenu{display: none;}
+
+header nav ul
+{
+    list-style-type: none;
+    margin: 0px;
+    text-align: right;
+}
+
+header nav ul li
+{
+    display: inline-block;
+    text-align: center;
+    padding: 0px 6px;
+}
+
+header nav ul li.icone i
+{
+    float: left;
+    margin-right: 5px;
+    margin-top: 10px;
+    color: #4caf50;
+}
