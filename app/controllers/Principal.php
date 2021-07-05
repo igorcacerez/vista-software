@@ -124,6 +124,30 @@ class Principal extends CI_controller
         $bairros = null; // Bairros retornados da api vista
         $categorias = null; // Categorias retornadas da api vista
 
+
+        // Instancia o objeto de requisição
+        $objHelperSend = new SendCurl();
+
+        // Informações a ser retornadas pelo
+        $informacoesBuscaApi = [
+            "fields" => [
+                "Dormitorios"
+            ],
+        ];
+
+        // Configura a url
+        $url = URL_API . "imoveis/listarConteudo?key=" . TOKEN_VISTA;
+        $url .= "&pesquisa=" . json_encode($informacoesBuscaApi);
+
+        // Configura o cabeçalho da requisição
+        $objHelperSend->setHeader("Accept", "application/json"); // Aceita resposta em Json
+
+        // Realiza a requisição na Api do Vista CRM
+        $categorias = $objHelperSend->resquest($url, null, "GET", true);
+
+        $this->debug($categorias);
+
+
         // Busca os bairros
         $bairros = $this->objHelperApoio->retornaBairros();
 

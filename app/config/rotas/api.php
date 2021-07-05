@@ -44,3 +44,7 @@ $Rotas->onGroup("api-mensalidade","PUT","update/{p}/{p}","update");
 $Rotas->group("api-grafico","api/grafico","Api\Grafico");
 $Rotas->onGroup("api-grafico","GET","lucro","lucroImobiliaria");
 $Rotas->onGroup("api-grafico","GET","contratos","contratosPorMes");
+
+// IMOVEIS
+$Rotas->group("api-imovel","api/imovel","Api\Imovel");
+$Rotas->onGroup("api-imovel","GET","get","getAll");
