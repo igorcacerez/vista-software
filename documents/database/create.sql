@@ -64,7 +64,7 @@ CREATE TABLE contrato(
 );
 
 
-CREATE TABLE mensalidadeRepasse(
+CREATE TABLE mensalidaderepasse(
     id_mensalidadeRepasse INT NOT NULL AUTO_INCREMENT,
     id_contrato INT NOT NULL,
     valorTotal FLOAT NOT NULL DEFAULT 0,
