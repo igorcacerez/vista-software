@@ -17,6 +17,11 @@ if($("#listaImoveis").length)
             totalPaginas: 1,
         },
         methods: {
+
+            /**
+             * Método responsável por carregar uma nova
+             * página de imoveis.
+             */
             buscarMais: function () {
 
                 // Altera a pagina
@@ -25,6 +30,16 @@ if($("#listaImoveis").length)
                 // Busca mais imoveis
                 buscaImovel(buscaAtual, tipoAtivo, pagina);
 
+            }, // End >> fun::buscarMais()
+
+            /**
+             * Método responsável por abrir a modal de
+             * saiba mais.
+             */
+            saibaMais: function ()
+            {
+                // Aciona a modal
+                $("#modalImovel").modal("show");
             }
 
         } // End >> methods
@@ -94,6 +109,11 @@ $(".btnEscolha").on("click", function () {
 });
 
 
+/**
+ * Método responsável por receber as informações do
+ * formulário e realizar o filtro.
+ * ----------------------------------------------
+ */
 $("#formBusca").on("submit", function () {
 
     // Não atualiza
@@ -129,6 +149,15 @@ $("#formBusca").on("submit", function () {
 });
 
 
+/**
+ * Método responsável por chamar a api local e popular o
+ * objeto da Vue responsável por exibir os dados na view.
+ * ------------------------------------------------------------
+ * @param form
+ * @param tipo
+ * @param pag
+ * @returns {Promise<unknown>}
+ */
 function buscaImovel(form, tipo = tipoAtivo, pag = 0)
 {
     return new Promise(function (resolve, reject) {
@@ -186,7 +215,7 @@ function buscaImovel(form, tipo = tipoAtivo, pag = 0)
             });
 
     });
-}
+} // End >> fun::buscaImovel()
 
 
 /**

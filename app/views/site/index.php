@@ -180,7 +180,7 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary">Saiba Mais</button>
+                                    <button class="btn btn-primary" v-on:click="saibaMais()">Saiba Mais</button>
                                 </div>
                             </div>
                         </div>
@@ -199,7 +199,31 @@
         </div>
     </section>
     <!-- End >> Exibe os imóveis -->
-    
+
+
+    <!-- Modal do imóvel -->
+    <div class="modal fade" id="modalImovel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="border: none; background: none;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2>Se interessou?</h2>
+
+                    <p>Entre em contato conosco.</p>
+
+                    <a href="https://web.whatsapp.com/send?phone=+555182781111" target="_blank">
+                        <button type="button" class="btn btn-primary">Fale Conosco</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <?php $this->view("site/include/footer"); ?>
 </body>

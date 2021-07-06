@@ -245,6 +245,9 @@ header nav ul li a img
     border-radius: 6px;
 }
 
+#modalImovel .modal-header {padding: 0px 3px;border: none;}
+#modalImovel .modal-body{text-align: center; padding-bottom: 50px;}
+#modalImovel .modal-body .btn-primary{background-color: #4bb04f; border-color: #4bb04f;}
 /**
 * FOOTER =======================================================
 * ========================================================== **/

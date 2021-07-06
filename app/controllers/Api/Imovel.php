@@ -55,7 +55,7 @@ class Imovel extends \DuugWork\Controller
         // Informações a ser retornadas pelo
         $informacoesBuscaApi = [
             "fields" => [
-                "Codigo", "Categoria", "Status", "TotalBanheiros",
+                "Codigo", "Categoria", "Status", "TotalBanheiros", "DescricaoWeb",
                 "FotoDestaque", "Bairro", "Cidade", "UF", "Dormitorios", "Suites",
                 "Vagas", "AreaTotal", "AreaPrivativa", "ValorVenda", "ValorLocacao"
             ],
@@ -106,6 +106,7 @@ class Imovel extends \DuugWork\Controller
                     $objRetorno = [
                         "codigo" => $imovel->Codigo,
                         "status" => $imovel->Status,
+                        "descricoa" => $imovel->DescricaoWeb,
                         "imagem" => (!empty($imovel->FotoDestaque) ? $imovel->FotoDestaque : BASE_URL . "assets/theme/site/img/imagem.png"),
                         "cidade" => $imovel->Cidade . ", " . $imovel->Bairro . " - " . $imovel->UF,
                         "bairro" => $imovel->Bairro,
