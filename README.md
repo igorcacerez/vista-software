@@ -29,7 +29,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 ## Instalação
 
 Para instalação clone ou baixe o projeto e depois disso rode o seguinte comando. ``composer update``
-<br>Depois de rodar o comando acesse o arquivo ````app > config > config.php```` e altere o ````BASE_URL````  para o ambiente de teste como por exemplo ````http://localhost/git/vista-softwarw/````
+<br>Depois de rodar o comando acesse o arquivo ````app > config > config.php```` e altere o ````BASE_URL````  para o ambiente de teste como por exemplo ````http://localhost/git/vista-software/````
 
 
 ````php
@@ -37,7 +37,7 @@ Para instalação clone ou baixe o projeto e depois disso rode o seguinte comand
 defined('BASE_URL') OR define('BASE_URL', 'http://localhost/git/vista-software/');
 ````
 
-Esse procedimento deve repetido, dessa vez no seguinte arquivo  ````assets > app > global.js````
+Esse procedimento deve ser repetido, dessa vez no seguinte arquivo  ````assets > app > global.js````
 
 ````javascript
 // Altere as duas URLs
@@ -51,9 +51,9 @@ var Dados = {
 ## Banco de dados
 
 
-Crie um no novo banco de dados no seu ambiente e rode o sql de criação das tabelas. O script 
+Crie um novo banco de dados no seu ambiente e rode o sql de criação das tabelas. O script 
 está no seguinte local ````documents > database > create.sql```` <br>
-Após acesse o arquivo ````app > config > database.php```` e configure as creedencias do seu banco de dados.
+Após acesse o arquivo ````app > config > database.php```` e configure as credencias do seu banco de dados.
 
 ````php
 $database = [
@@ -68,7 +68,7 @@ $database = [
 
 ## Acessos
 
-Para ver o projeto em funcionamento acesse a seguintes urls: <br>
+Para ver o projeto em funcionamento acesse as seguintes urls: <br>
 - [Site Imobiliária](https://woope.me/teste-vista/)
 - [Painel Administrativo](https://woope.me/teste-vista/painel)
 
