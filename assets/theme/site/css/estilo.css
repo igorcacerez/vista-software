@@ -6,35 +6,277 @@ html, body
 a{text-decoration: none;}
 
 /**
-* HEADER ===================================================
+* HEADER =======================================================
 * ========================================================== **/
 
-header
-{
-    background: #3c3a3b;
-    padding: 15px 0px;
-}
+header {background: #3c3a3b; padding: 5px 0px 12px;}
+header .logo{max-width: 90%}
 
-header .btnMenu{display: none;}
+header nav{padding-top: 25px}
 
 header nav ul
 {
     list-style-type: none;
     margin: 0px;
     text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 header nav ul li
 {
     display: inline-block;
     text-align: center;
-    padding: 0px 6px;
+    padding: 0px 16px;
 }
 
-header nav ul li.icone i
+header nav ul li a {display: flex;color: #fff;}
+header nav ul li a p{font-size: 0.8em;}
+
+header nav ul li a:hover {color: #fff;}
+header nav ul li a:hover p {opacity: 0.7;}
+
+header nav ul li a img
 {
     float: left;
-    margin-right: 5px;
-    margin-top: 10px;
-    color: #4caf50;
+    margin-right: 12px;
+    width: 25px; height: 25px;
+    margin-top: 5px;
 }
+
+/**
+* FORM PESQUISA ================================================
+* ========================================================== **/
+
+.pesquisa
+{
+    background-color: #3c3a3b;
+    background-image: url("../img/banner.png");
+    background-size: cover;
+    background-position: center;
+    padding: 90px 0px;
+}
+
+
+.pesquisa .btnEscolha
+{
+    display: inline-block;
+    margin: 10px;
+    padding: 13px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border: 1px solid #fff;
+    width: 132px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.pesquisa .btnEscolha p{display: inline;}
+
+.pesquisa .btnEscolha span
+{
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    float: left;
+    margin-right: 0px;
+    margin-top: 4px;
+}
+
+.pesquisa .btnEscolha.selecionado
+{
+    background-color: #f5791f;
+    border-color: #f5791f;
+    color: #fff;
+}
+
+.pesquisa .inputCodigo
+{
+    border: 1px solid #d0d0d0;
+    padding: 8px 8px;
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+
+    color: #303030;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 18px;
+    -webkit-font-smoothing: inherit;
+}
+
+.pesquisa .inputCodigo:focus-visible{outline: none;}
+
+.pesquisa .btn-envia
+{
+    display: block;
+    border: none;
+    background: #f5791f;
+    color: #fff;
+    font-weight: 500;
+    width: 100%;
+    height: 36px;
+    letter-spacing: 2px;
+    transition: background 0.5s;
+}
+
+.pesquisa .btn-envia:hover
+{
+    background: #ea7621;
+}
+
+
+/**
+* LISTA IMOVEIS ================================================
+* ========================================================== **/
+
+.listaImoveis{padding: 30px 0px;}
+
+.listaImoveis .card
+{
+    transition: all 0.3s;
+    background-color: #eee;
+    color: #524c4f;
+    border: 1px solid #eee;
+}
+
+.listaImoveis .card .imagem-imovel
+{
+    background-image: url(http://localhost/git/vista-software/assets/theme/site/img/imagem-exemplo.jpg);
+    height: 240px;
+    background-size: auto 120%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    box-shadow: none;
+    transition: all 0.5s;
+}
+
+.listaImoveis .card .imagem-imovel .valor
+{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    padding: 7px 16px;
+    background: #3c3a3b;
+    color: #fff;
+}
+
+.listaImoveis .card h5 {color: #f57b3d;padding-bottom: 10px;}
+.listaImoveis .card h5 span
+{
+    display: block;
+    font-size: 0.8em;
+    padding-bottom: 5px;
+}
+
+.listaImoveis .card .endereco{font-size: 0.95em; padding-bottom: 14px;}
+.listaImoveis .card .endereco i{color: #c6c6c6; padding-right: 5px;}
+
+.listaImoveis .card .imovel-caracteristicas
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.listaImoveis .card .imovel-caracteristicas .item
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.listaImoveis .card .imovel-caracteristicas .item .valor
+{
+    margin: 6px 0px 0px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.listaImoveis .card .imovel-caracteristicas .item .descricao {font-size: 0.75em;}
+
+.listaImoveis .card .btn-primary
+{
+    width: 98%;
+    display: block;
+    margin: 10px auto 0px;
+    background-color: #f57b3d;
+    border-color: #f57b3d;
+    transition: all .3s;
+}
+
+.listaImoveis .card .btn-primary:hover
+{
+    background-color: #e66929;
+    border-color: #e66929;
+}
+
+.listaImoveis .card:hover {box-shadow: 2px 1px 8px 0px #ccc;}
+
+.listaImoveis .card:hover .imagem-imovel
+{
+    background-size: auto 150%;
+}
+
+
+/**
+* FOOTER =======================================================
+* ========================================================== **/
+
+footer{background-color: #3c3a3b; padding: 18px 0px 0px;}
+
+footer .logo img{max-width: 90%;}
+footer .logo p
+{
+    font-size: 0.9em;
+    color: #666;
+    padding-top: 5px;
+}
+
+footer .icone img
+{
+    float: left;
+    margin-right: 19px;
+    width: 32px;
+    height: 32px;
+    margin-top: 9px;
+}
+
+footer .icone p {text-align: left; color: #fff;}
+footer .icone:hover p {opacity: 0.7}
+
+footer .iconeSocial{padding-top: 40px; text-align: left;}
+footer .iconeSocial a{padding: 5px;}
+
+footer .sub
+{
+    background: #383637;
+    margin-top: 10px;
+    padding: 10px 0px;
+}
+
+footer .sub p
+{
+    color: #666;
+    margin: 0px;
+    font-size: 0.8em;
+}
+
+footer .sub p a{color: #666; font-weight: bold;}

@@ -74,37 +74,27 @@
 
             <!-- Demais informações -->
             <div class="col-md-9">
-                <!-- Abre menu responsivo -->
-                <button class="btnMenu">
-                    <i class="fas fa-bars"></i>
-                </button>
 
                 <!-- Menu -->
                 <nav>
                     <ul class="menuTop">
                         <li>
-                            <a href="#" class="bold">
-                                <i style="color: #f57b3d!important;" class="fa fa-file-text-o"></i> 2ª VIA BOLETO
-                            </a>
-                        </li>
-
-                        <li class="icone">
                             <a href="https://web.whatsapp.com/send?phone=+5551981228895">
-                                <i class="fab fa-whatsapp"></i>
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" />
                                 <p>Locação <br> (51) 98122-8895</p>
                             </a>
                         </li>
 
-                        <li class="icone">
+                        <li>
                             <a href="https://web.whatsapp.com/send?phone=+5551981228895">
-                                <i class="fab fa-whatsapp"></i>
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" />
                                 <p>Financeiro <br> (51) 98278-2222</p>
                             </a>
                         </li>
 
-                        <li class="icone">
+                        <li>
                             <a href="https://web.whatsapp.com/send?phone=+5551981228895">
-                                <i class="fab fa-whatsapp"></i>
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" />
                                 <p>Vendas <br> (51) 98278-1111</p>
                             </a>
                         </li>

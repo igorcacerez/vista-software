@@ -1,0 +1,71 @@
+@media (max-width: 990px)
+{
+    /* Footer */
+    footer .logo{text-align: center; padding-bottom: 30px;}
+
+    /* Header */
+    header nav ul li a img{display: none;}
+
+    /* Pesquisa */
+    .pesquisa{padding: 50px 0px;}
+}
+
+
+@media (max-width: 767px)
+{
+    /* Footer */
+    footer .iconeSocial{text-align: center; padding: 30px 0px;}
+
+    /* Header */
+    header .logo{display: block; margin: 0 auto 9px;}
+    header nav{padding-top: 13px;}
+    header nav ul
+    {
+        justify-content: center;
+        align-content: flex-start;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    /* Imoveis */
+    .listaImoveis .card .imagem-imovel{height: 290px}
+}
+
+@media (max-width: 575px)
+{
+    /* Footer */
+    footer .icone
+    {
+        display: block;
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    footer .sub{text-align: center}
+}
+
+@media (max-width: 450px)
+{
+    /* Imoveis */
+    .listaImoveis .card .imagem-imovel{height: 240px;}
+}
+
+@media (max-width: 410px)
+{
+    /* Header */
+    header nav ul li{padding: 0 8px}
+    header nav ul li a p{font-size: 0.68em;}
+}
+
+
+@media (max-width: 340px)
+{
+    /* Pesquisa */
+    .pesquisa .btnEscolha span{display: none;}
+
+    .pesquisa .btnEscolha
+    {
+        width: 110px;
+        padding: 12px;
+    }
+}

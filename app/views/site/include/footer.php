@@ -1,43 +1,68 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <div class="col-md-3">
-            <a href="<?= BASE_URL; ?>">
-                <img src="<?= BASE_URL; ?>assets/theme/site/img/logo.png " class="logo" alt="<?= SITE_NOME; ?> logo" />
-            </a>
+        <div class="row">
+            <div class="col-lg-3 col-md-12 logo">
+                <a href="<?= BASE_URL; ?>">
+                    <img src="<?= BASE_URL; ?>assets/theme/site/img/logo.png " alt="<?= SITE_NOME; ?> logo" />
+                    <p>
+                        AV. Wenceslau Escobar, 2037 <br>
+                        Tristeza - Porto Alegre - RS
+                    </p>
+                </a>
+            </div>
+
+            <div class="col-lg-9 col-md-12">
+                <div class="row text-center">
+                    <div class="col-md-4 col-sm-6">
+                        <a class="icone" href="https://web.whatsapp.com/send?phone=+5551982782222" target="_blank">
+                             <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" />
+                            <p>Locação <br> (51) 98122-8895</p>
+                        </a>
+
+                        <a class="icone" href="https://web.whatsapp.com/send?phone=+555182781111" target="_blank">
+                             <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone Telefone" />
+                            <p>Vendas <br> (51) 98278-1111</p>
+                        </a>
+                    </div>
+
+                    <div class="col-md-4  col-sm-6">
+                        <a class="icone" href="https://web.whatsapp.com/send?phone=+5551982782222" target="_blank">
+                            <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" />
+                            <p>Financeiro <br> (51) 98278-2222</p>
+                        </a>
+
+                        <a class="icone" href="tel:+555132692901" target="_blank">
+                            <img src="<?= BASE_URL; ?>assets/theme/site/img/telefone.png" alt="Icone Telefone" />
+                            <p>Ligue! <br> (51) 3269-2901</p>
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12">
+                        <div class="iconeSocial">
+                            <a href="https://www.facebook.com/passowimoveis" target="_blank">
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/facebook.png" alt="Icone Facebook" />
+                            </a>
+
+                            <a href="https://www.youtube.com/channel/UCC5GrrRXp71E9X5FvIAy4VQ" target="_blank">
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/youtube.png" alt="Icone YouTube" />
+                            </a>
+
+                            <a href="https://www.instagram.com/passowimoveis" target="_blank">
+                                <img src="<?= BASE_URL; ?>assets/theme/site/img/instagram.png" alt="Icone Instagram" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="col-md-3">
-            <a class="icone" href="https://web.whatsapp.com/send?phone=+5551982782222" target="_blank">
-                <!-- <img src="<?= BASE_URL; ?>assets/theme/site/img/whatsapp.png" alt="Icone WhatsApp" /> -->
-                <span class="whats">
-                        <i class="fab fa-whatsapp"></i>
-                    </span>
-                <p>Financeiro <br> (51) 98278-2222</p>
-            </a>
-
-            <a class="icone" href="tel:+555132692901" target="_blank">
-                <!-- <img src="<?= BASE_URL; ?>assets/theme/site/img/telefone.png" alt="Icone Telefone" /> -->
-                <span class="telefone">
-                        <i class="fas fa-phone-alt"></i>
-                    </span>
-
-                <p>Ligue! <br> (51) 3269-2901</p>
-            </a>
-        </div>
-
-        <div class="col-md-3">
-            <a href="https://www.facebook.com/passowimoveis" target="_blank" class="social fb">
-                <i class="fab fa-facebook"></i>
-            </a>
-
-            <a href="https://www.youtube.com/channel/UCC5GrrRXp71E9X5FvIAy4VQ" target="_blank" class="social youtube">
-                <i class="fab fa-youtube"></i>
-            </a>
-
-            <a href="https://www.instagram.com/passowimoveis" target="_blank" class="social insta">
-                <i class="fab fa-instagram"></i>
-            </a>
+    <div class="sub">
+        <div class="container">
+            <div class="row">
+                <p>© <?= date("Y") ?> <a href="https://www.vistasoft.com.br/" target="_blank">Vista Software</a> - Todos os direitos reservados</p>
+            </div>
         </div>
     </div>
 </footer>

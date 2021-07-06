@@ -2,33 +2,32 @@
 
     <!-- Pesquisa -->
     <section class="pesquisa">
-        <div class="container">
+        <form id="formBusca">
+            <div class="container">
 
-            <!-- Botões -->
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Comprar -->
-                    <div class="btnEscolha selecionado" id="btnComprar" data-tipo="comprar">
-                        <p>
-                            <span></span>
-                            Comprar
-                        </p>
-                    </div>
+                <!-- Botões -->
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <!-- Comprar -->
+                        <div class="btnEscolha selecionado" id="btnComprar" data-tipo="comprar">
+                            <p>
+                                <span></span>
+                                Comprar
+                            </p>
+                        </div>
 
-                    <!-- Aluguel -->
-                    <div class="btnEscolha" id="btnAlugar" data-tipo="alugar">
-                        <p>
-                            <span></span>
-                            Alugar
-                        </p>
+                        <!-- Aluguel -->
+                        <div class="btnEscolha" id="btnAlugar" data-tipo="alugar">
+                            <p>
+                                <span></span>
+                                Alugar
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Formulário -->
-            <div class="row">
-                <form id="formBusca">
-
+                <!-- Formulário -->
+                <div class="row">
                     <!-- Tipo de imovel -->
                     <div class="col-sm-12 col-md-6 col-lg-2">
                         <div class="form-group">
@@ -79,26 +78,13 @@
                                 <option value="400000-500000">R$ 400.000,00 à R$ 500.000,00</option>
                                 <option value="500000-999999999">acima de R$ 500.000,00</option>
                             </select>
-
-                            <!-- Aluguel -->
-                            <select class="selectBusca" name="valorAluguel" id="valorAluguel" style="display: none;">
-                                <option value="">Faixa de Valores</option>
-                                <option value="0-1000">até R$ 1.000,00</option>
-                                <option value="1000-2000">R$ 1.000,00 à R$ 2.000,00</option>
-                                <option value="2000-3000">R$ 2.000,00 à R$ 3.000,00</option>
-                                <option value="3000-4000">R$ 3.000,00 à R$ 4.000,00</option>
-                                <option value="4000-5000">R$ 4.000,00 à R$ 5.000,00</option>
-                                <option value="5000-7500">R$ 5.000,00 à R$ 7.500,00</option>
-                                <option value="7500-10000">R$ 7.500,00 à R$ 10.000,00</option>
-                                <option value="10000-999999">acima de R$ 10.000,00</option>
-                            </select>
                         </div>
                     </div>
 
-                    <!-- Tipo de imovel -->
+                    <!-- Código -->
                     <div class="col-sm-12 col-md-6 col-lg-2">
                         <div class="form-group">
-                            <input type="text" name="codigo" placeholder="Código" />
+                            <input class="inputCodigo" type="text" name="codigo" placeholder="Código" />
                         </div>
                     </div>
 
@@ -110,11 +96,9 @@
                             </button>
                         </div>
                     </div>
-
-                </form>
+                </div>
             </div>
-
-        </div>
+        </form>
     </section>
     <!-- End >> Pesquisa -->
 
@@ -125,7 +109,7 @@
 
                 <!-- Card do imovel -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card">
+                    <div class="card cardImovel">
 
                         <!-- Imagem do imovel -->
                         <div class="imagem-imovel" style="background-image: url('<?= BASE_URL; ?>assets/theme/site/img/imagem-exemplo.jpg')">
@@ -151,16 +135,34 @@
                             </div>
 
                             <!-- Caracteristicas -->
-                            <div class="row imovel-caracteristicas text-center">
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <div class="imovel-caracteristicas ">
+                                        <div class="item">
+                                            <i class="fa fa-bed"></i>
+                                            <p class="valor">2</p>
+                                            <p class="descricao">Dormitórios</p>
+                                        </div>
 
-                                <div class="col-lg-2 col-md-4">
-                                    <div class="item">
-                                        <i class="fa fa-bed"></i>
-                                        <p class="valor">2</p>
-                                        <p class="descricao">Dormitórios</p>
+                                        <div class="item">
+                                            <i class="fa fa-bed"></i>
+                                            <p class="valor">2</p>
+                                            <p class="descricao">Dormitórios</p>
+                                        </div>
+
+                                        <div class="item">
+                                            <i class="fa fa-bed"></i>
+                                            <p class="valor">2</p>
+                                            <p class="descricao">Dormitórios</p>
+                                        </div>
+
+                                        <div class="item">
+                                            <i class="fa fa-bed"></i>
+                                            <p class="valor">2</p>
+                                            <p class="descricao">Dormitórios</p>
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row">
