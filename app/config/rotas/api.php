@@ -47,4 +47,4 @@ $Rotas->onGroup("api-grafico","GET","contratos","contratosPorMes");
 
 // IMOVEIS
 $Rotas->group("api-imovel","api/imovel","Api\Imovel");
-$Rotas->onGroup("api-imovel","GET","get","getAll");
+$Rotas->onGroup("api-imovel","POST","filtra/{p}","getAll");

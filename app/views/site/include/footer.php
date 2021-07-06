@@ -76,5 +76,8 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
 <!-- Autoload JS ================================================== -->
 <?php $this->view("autoload/js"); ?>

@@ -153,6 +153,7 @@ header nav ul li a img
     background-color: #eee;
     color: #524c4f;
     border: 1px solid #eee;
+    margin-bottom: 30px;
 }
 
 .listaImoveis .card .imagem-imovel
@@ -193,6 +194,7 @@ header nav ul li a img
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    min-height: 92px;
 }
 
 .listaImoveis .card .imovel-caracteristicas .item
@@ -234,7 +236,14 @@ header nav ul li a img
 {
     background-size: auto 150%;
 }
-
+.buscarMais
+{
+    border: none;
+    background: #3c3a3b;
+    color: #fff;
+    padding: 10px 35px;
+    border-radius: 6px;
+}
 
 /**
 * FOOTER =======================================================
